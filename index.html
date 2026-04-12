@@ -210,6 +210,35 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--t1);min-heig
 .plat-stat-val{font-size:18px;font-weight:700;color:var(--t1);}
 .plat-stat-lbl{font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);margin-top:3px;}
 
+/* Analytics input form */
+.an-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px;}
+.an-tab{padding:10px 6px;font-size:12px;font-weight:700;font-family:'Syne',sans-serif;border-radius:var(--rsm);border:1px solid var(--b2);background:var(--s1);color:var(--t3);cursor:pointer;text-align:center;transition:all .15s;}
+.an-tab.on{background:var(--gold-bg);border-color:rgba(212,168,83,.4);color:var(--gold-l);}
+.an-panel{display:none;}.an-panel.on{display:block;animation:fadeUp .2s ease;}
+.input-group{margin-bottom:12px;}
+.input-lbl{font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.an-input{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:11px 13px;font-size:15px;font-family:'DM Mono',monospace;color:var(--t1);-webkit-appearance:none;appearance:none;}
+.an-input:focus{outline:none;border-color:var(--gold);}
+.an-input::placeholder{color:var(--t3);}
+.an-input-prefix{position:relative;}
+.an-input-prefix::before{content:'£';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:'DM Mono',monospace;font-size:14px;color:var(--t3);pointer-events:none;}
+.an-input-prefix .an-input{padding-left:24px;}
+.an-input-suffix{position:relative;}
+.an-input-suffix::after{content:'%';position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:'DM Mono',monospace;font-size:14px;color:var(--t3);pointer-events:none;}
+.an-input-suffix .an-input{padding-right:28px;}
+.analyse-btn{width:100%;margin-top:16px;padding:15px;font-size:15px;font-weight:800;font-family:'Syne',sans-serif;border-radius:var(--r);background:var(--gold);color:#0d0d0d;border:none;cursor:pointer;transition:opacity .15s,transform .1s;}
+.analyse-btn:active{transform:scale(0.98);opacity:.85;}
+.analyse-btn:disabled{opacity:.25;cursor:not-allowed;}
+.analysis-out{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:16px;margin-top:14px;animation:fadeUp .3s ease;}
+.analysis-out-title{font-size:13px;font-weight:700;color:var(--gold-l);margin-bottom:10px;font-family:'DM Mono',monospace;letter-spacing:.04em;}
+.analysis-body{font-size:14px;color:var(--t1);line-height:1.75;white-space:pre-wrap;}
+.analysis-spinner{width:22px;height:22px;border:2px solid var(--b2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:20px auto;}
+.computed-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.c-stat{background:var(--s2);border-radius:var(--rsm);padding:11px 13px;}
+.c-stat-lbl{font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+.c-stat-val{font-size:18px;font-weight:700;letter-spacing:-0.02em;}
+
 /* A2HS */
 .a2hs{background:var(--gold-bg);border:1px solid rgba(212,168,83,.2);border-radius:var(--rsm);padding:11px 14px;font-size:12px;font-family:'DM Mono',monospace;color:var(--gold-l);line-height:1.6;margin-bottom:18px;display:none;}
 .a2hs-close{float:right;background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;margin-left:8px;}
@@ -299,8 +328,80 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--t1);min-heig
 <!-- ══════════════ ANALYTICS PAGE ══════════════ -->
 <div class="page" id="page-analytics">
   <div class="page-title">Analytics</div>
-  <div id="analytics-content"></div>
+
+  <div class="an-tabs">
+    <button class="an-tab on" id="antab-vault" onclick="showAnTab('vault')">From vault</button>
+    <button class="an-tab" id="antab-manual" onclick="showAnTab('manual')">Manual input</button>
+  </div>
+
+  <!-- Vault stats panel -->
+  <div class="an-panel on" id="anpanel-vault">
+    <div id="analytics-content"></div>
+  </div>
+
+  <!-- Manual input panel -->
+  <div class="an-panel" id="anpanel-manual">
+
+    <div class="input-group">
+      <div class="input-lbl">Items bought &amp; sold</div>
+      <div class="input-row">
+        <div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);margin-bottom:4px;">Total bought</div>
+          <input class="an-input" type="number" id="an-bought" placeholder="0" min="0" step="1" oninput="updateComputed()">
+        </div>
+        <div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);margin-bottom:4px;">Total sold</div>
+          <input class="an-input" type="number" id="an-sold" placeholder="0" min="0" step="1" oninput="updateComputed()">
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <div class="input-lbl">Money in &amp; out</div>
+      <div class="input-row">
+        <div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);margin-bottom:4px;">Total cost (£)</div>
+          <div class="an-input-prefix"><input class="an-input" type="number" id="an-cost" placeholder="0.00" min="0" step="0.01" oninput="updateComputed()"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);margin-bottom:4px;">Total revenue (£)</div>
+          <div class="an-input-prefix"><input class="an-input" type="number" id="an-revenue" placeholder="0.00" min="0" step="0.01" oninput="updateComputed()"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <div class="input-lbl">Platform fees &amp; postage</div>
+      <div class="input-row">
+        <div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);margin-bottom:4px;">Total fees (£)</div>
+          <div class="an-input-prefix"><input class="an-input" type="number" id="an-fees" placeholder="0.00" min="0" step="0.01" oninput="updateComputed()"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);margin-bottom:4px;">Postage costs (£)</div>
+          <div class="an-input-prefix"><input class="an-input" type="number" id="an-postage" placeholder="0.00" min="0" step="0.01" oninput="updateComputed()"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <div class="input-lbl">Time period</div>
+      <input class="an-input" type="text" id="an-period" placeholder="e.g. Jan–Mar 2025, last 30 days..." style="width:100%;">
+    </div>
+
+    <!-- Live computed stats -->
+    <div class="computed-stats" id="computed-stats" style="display:none;">
+      <div class="c-stat"><div class="c-stat-lbl">Net profit</div><div class="c-stat-val" id="cs-profit">£0</div></div>
+      <div class="c-stat"><div class="c-stat-lbl">ROI</div><div class="c-stat-val" id="cs-roi">0%</div></div>
+      <div class="c-stat"><div class="c-stat-lbl">Sell-through</div><div class="c-stat-val" id="cs-str">0%</div></div>
+      <div class="c-stat"><div class="c-stat-lbl">Avg sale price</div><div class="c-stat-val" id="cs-avg">£0</div></div>
+    </div>
+
+    <button class="analyse-btn" id="an-btn" onclick="runManualAnalysis()">Analyse my numbers</button>
+    <div id="manual-analysis-out"></div>
+  </div>
 </div>
+
 
 <!-- Sold modal -->
 <div class="modal-overlay" id="sold-modal">
@@ -817,7 +918,123 @@ function confirmSold(){
 }
 
 // ══════════════════════════════════════════════════════
-// ANALYTICS
+// ANALYTICS TAB SWITCHER
+// ══════════════════════════════════════════════════════
+function showAnTab(t){
+  ['vault','manual'].forEach(x=>{
+    document.getElementById('antab-'+x).classList.toggle('on',x===t);
+    document.getElementById('anpanel-'+x).classList.toggle('on',x===t);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// ANALYTICS — LIVE COMPUTED STATS
+// ══════════════════════════════════════════════════════
+function updateComputed(){
+  const bought=parseFloat(document.getElementById('an-bought').value)||0;
+  const sold=parseFloat(document.getElementById('an-sold').value)||0;
+  const cost=parseFloat(document.getElementById('an-cost').value)||0;
+  const revenue=parseFloat(document.getElementById('an-revenue').value)||0;
+  const fees=parseFloat(document.getElementById('an-fees').value)||0;
+  const postage=parseFloat(document.getElementById('an-postage').value)||0;
+
+  const hasAny=bought||sold||cost||revenue;
+  document.getElementById('computed-stats').style.display=hasAny?'grid':'none';
+  if(!hasAny)return;
+
+  const netProfit=revenue-cost-fees-postage;
+  const totalSpend=cost+fees+postage;
+  const roi=totalSpend>0?(netProfit/totalSpend)*100:0;
+  const str=bought>0?(sold/bought)*100:0;
+  const avgSale=sold>0?revenue/sold:0;
+
+  const profitEl=document.getElementById('cs-profit');
+  profitEl.textContent='£'+netProfit.toFixed(2);
+  profitEl.style.color=netProfit>=0?'var(--ok)':'var(--err)';
+
+  const roiEl=document.getElementById('cs-roi');
+  roiEl.textContent=roi.toFixed(0)+'%';
+  roiEl.style.color=roi>=0?'var(--ok)':'var(--err)';
+
+  document.getElementById('cs-str').textContent=str.toFixed(0)+'%';
+  document.getElementById('cs-avg').textContent='£'+avgSale.toFixed(2);
+}
+
+// ══════════════════════════════════════════════════════
+// ANALYTICS — AI ANALYSIS OF MANUAL NUMBERS
+// ══════════════════════════════════════════════════════
+async function runManualAnalysis(){
+  const key=getKey();
+  if(!key){alert('Add your API key first');return;}
+
+  const bought=parseFloat(document.getElementById('an-bought').value)||0;
+  const sold=parseFloat(document.getElementById('an-sold').value)||0;
+  const cost=parseFloat(document.getElementById('an-cost').value)||0;
+  const revenue=parseFloat(document.getElementById('an-revenue').value)||0;
+  const fees=parseFloat(document.getElementById('an-fees').value)||0;
+  const postage=parseFloat(document.getElementById('an-postage').value)||0;
+  const period=document.getElementById('an-period').value.trim()||'unspecified period';
+
+  if(!bought&&!sold&&!cost&&!revenue){
+    alert('Enter at least some numbers first');return;
+  }
+
+  const netProfit=revenue-cost-fees-postage;
+  const totalSpend=cost+fees+postage;
+  const roi=totalSpend>0?(netProfit/totalSpend)*100:0;
+  const str=bought>0?(sold/bought)*100:0;
+  const avgSale=sold>0?revenue/sold:0;
+  const avgCost=bought>0?cost/bought:0;
+  const unsold=bought-sold;
+
+  const out=document.getElementById('manual-analysis-out');
+  out.innerHTML='<div class="analysis-out"><div class="analysis-spinner"></div></div>';
+  document.getElementById('an-btn').disabled=true;
+
+  const prompt=`You are an expert reselling business analyst. A secondhand clothing reseller has given you their business numbers for ${period}. Give them a clear, honest, actionable analysis.
+
+Their numbers:
+- Items bought: ${bought}
+- Items sold: ${sold}
+- Items unsold/in stock: ${unsold}
+- Total buying cost: £${cost.toFixed(2)}
+- Total revenue: £${revenue.toFixed(2)}
+- Platform fees: £${fees.toFixed(2)}
+- Postage costs: £${postage.toFixed(2)}
+- Net profit: £${netProfit.toFixed(2)}
+- ROI: ${roi.toFixed(1)}%
+- Sell-through rate: ${str.toFixed(1)}%
+- Average sale price: £${avgSale.toFixed(2)}
+- Average cost per item: £${avgCost.toFixed(2)}
+
+Write a clear business analysis covering:
+1. Overall performance verdict — is this good, average, or needs improvement for a reseller?
+2. Profitability — is the margin healthy? What's eating into profit most?
+3. Sell-through rate — ${str.toFixed(1)}% — what does this mean and is it acceptable?
+4. ROI of ${roi.toFixed(1)}% — benchmark this against typical reselling ROI
+5. Unsold stock of ${unsold} items — what's the risk and what should they do?
+6. 3 specific, actionable recommendations to improve profit next period
+
+Tone: direct, expert, like a business advisor talking to a serious seller. No fluff. Use £ for all money. Keep it under 350 words. Use short paragraphs, not bullet points. Start with a one-line verdict.`;
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:prompt}]})
+    });
+    const data=await resp.json();
+    if(!resp.ok)throw new Error(data.error?.message||'API error');
+    const text=data.content.map(b=>b.text||'').join('').trim();
+    out.innerHTML=`<div class="analysis-out"><div class="analysis-out-title">AI analysis · ${period}</div><div class="analysis-body">${esc(text)}</div></div>`;
+  }catch(e){
+    out.innerHTML=`<div class="err-box">Error: ${esc(e.message)}</div>`;
+  }
+  document.getElementById('an-btn').disabled=false;
+}
+
+// ══════════════════════════════════════════════════════
+// ANALYTICS — VAULT STATS
 // ══════════════════════════════════════════════════════
 function renderAnalytics(){
   const vault=getVault();
