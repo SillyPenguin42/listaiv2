@@ -881,7 +881,7 @@ function renderAnalytics(){
     ${ranked.map((x,i)=>{
       const it=x.item||{};
       return `<div class="rank-item">
-        <div class="rank-num ${i===0?'top':'}">${i+1}</div>
+        <div class="rank-num ${i===0?'top':''}">${i+1}</div>
         <div class="rank-info">
           <div class="rank-name">${esc(it.brand||'Unknown')} ${esc(it.type||'')}</div>
           <div class="rank-meta">Sold on ${x.salePlatform||'?'} · £${(x.salePrice||0).toFixed(2)} sale${x.storageCode?' · '+esc(x.storageCode):''}</div>
