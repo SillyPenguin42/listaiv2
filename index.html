@@ -716,54 +716,73 @@ SEO score: title 75-80 chars (35pts) + keyword density (25pts) + description com
 // ══════════════════════════════════════════════════════
 // RENDER RESULTS
 // ══════════════════════════════════════════════════════
+
+// Global so onclick handlers can reach it
+function cpFull(platform,btn){
+  const bodyId={'v':'vd','d':'dd','e':'ed'}[platform];
+  const titleId={'v':'vt','d':'dt','e':'et'}[platform];
+  const title=document.getElementById(titleId)?.textContent||'';
+  const body=document.getElementById(bodyId)?.textContent||'';
+  const code=document.getElementById('storage-code-input')?.value.trim()||'';
+  const meas=document.getElementById('meas-input')?.value.trim()||'';
+  const storeLine='Storage code: '+(code||'___');
+  const parts=[];
+  if(title) parts.push(title);
+  if(body)  parts.push(body);
+  if(meas)  parts.push(meas);
+  parts.push(storeLine);
+  cp(parts.join('\n\n'),btn);
+}
+
 function renderResults(d){
   const it=d.item||{},v=d.vinted||{},dp=d.depop||{},eb=d.ebay||{};
   const tags=(dp.hashtags||[]).slice(0,5);
   const metaParts=[it.colour,it.size_label?`Size ${it.size_label}`:'',it.size_uk?`UK ${it.size_uk}`:'',it.condition,it.era].filter(Boolean);
-  const measBlock=d.measurements_block||'';
 
-  // Build full combined description for each platform
-  function buildFull(body,platform){
-    const code=document.getElementById('storage-code-input')?.value.trim()||'';
-    const meas=document.getElementById('meas-input')?.value.trim()||measBlock;
-    const storeLine='Storage code: '+(code||'___');
-    const parts=[];
-    if(body) parts.push(body);
-    if(meas) parts.push(meas);
-    parts.push(storeLine);
-    return parts.join('\n\n');
-  }
+  // Measurement placeholder based on item category
+  const isBottoms=/trouser|jogger|short|jean|skirt|pant/i.test(it.type||'');
+  const rawMeas=(d.measurements_block||'').trim();
+  const measPlaceholder=isBottoms
+    ? 'Waist (flat): ___cm\nTotal length: ___cm\nInseam: ___cm'
+    : 'Pit to pit: ___cm\nShoulder to hem: ___cm';
+  // Pre-fill with AI value or blank lines matching the placeholder
+  const measValue=rawMeas||'';
+  const measRows=measPlaceholder.split('\n').length;
 
-  function cpFull(platform,btn){
-    const bodyId={'v':'vd','d':'dd','e':'ed'}[platform];
-    const body=document.getElementById(bodyId)?.textContent||'';
-    const code=document.getElementById('storage-code-input')?.value.trim()||'';
-    const meas=document.getElementById('meas-input')?.value.trim()||measBlock;
-    const storeLine='Storage code: '+(code||'___');
-    const parts=[body];
-    if(meas) parts.push(meas);
-    parts.push(storeLine);
-    cp(parts.join('\n\n'),btn);
-  }
+  const vBody=v.description_body||v.description||'';
+  const dBody=dp.description_body||dp.description||'';
+  const eBody=eb.description_body||eb.description||'';
 
   document.getElementById('results').innerHTML=`<div class="results">
+
+    <!-- Item summary + editable fields -->
     <div class="item-pill">
       <div class="item-pill-name">${esc(it.brand||'Unknown')} ${esc(it.type||'')}</div>
       <div class="item-pill-meta">${metaParts.map(esc).join(' · ')}</div>
 
-      <div style="margin-top:10px;">
-        <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;">Measurements</div>
-        <textarea id="meas-input" rows="${measBlock?measBlock.split('\n').length+1:3}" placeholder="${it.item_category==='bottoms'?'Waist (flat): ___cm\nTotal length: ___cm\nInseam: ___cm':'Pit to pit: ___cm\nShoulder to hem: ___cm'}" style="width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:10px 12px;font-size:13px;font-family:'DM Mono',monospace;color:var(--gold-l);resize:none;-webkit-appearance:none;outline:none;line-height:1.6;">${esc(measBlock)}</textarea>
-      </div>
+      <div style="height:1px;background:var(--b1);margin:12px 0;"></div>
 
-      <div style="margin-top:8px;">
-        <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;">Storage code</div>
-        <div class="storage-row">
-          <input class="storage-input" id="storage-code-input" type="text" placeholder="Enter your code..." maxlength="30">
-        </div>
-      </div>
+      <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Measurements</div>
+      <textarea
+        id="meas-input"
+        rows="${measRows}"
+        placeholder="${measPlaceholder}"
+        style="width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:10px 12px;font-size:13px;font-family:'DM Mono',monospace;color:var(--gold-l);resize:none;-webkit-appearance:none;outline:none;line-height:1.8;display:block;"
+      >${esc(measValue)}</textarea>
+
+      <div style="height:1px;background:var(--b1);margin:10px 0;"></div>
+
+      <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Storage code</div>
+      <input
+        id="storage-code-input"
+        type="text"
+        placeholder="e.g. NK-BLK-TEE-M"
+        maxlength="40"
+        style="width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:10px 12px;font-size:13px;font-family:'DM Mono',monospace;color:var(--gold-l);-webkit-appearance:none;outline:none;display:block;"
+      >
     </div>
 
+    <!-- Platform tabs -->
     <div class="tabs">
       <button class="tab tab-v on" id="rtab-v" onclick="showTab('v')">Vinted</button>
       <button class="tab tab-d" id="rtab-d" onclick="showTab('d')">Depop</button>
@@ -776,16 +795,25 @@ function renderResults(d){
       ${seoBar(v.seo_score)}
       <div class="field">
         <div class="fhead"><span class="flbl">Title</span><button class="cpbtn" onclick="cp(document.getElementById('vt').textContent,this)">copy</button></div>
-        <div class="fbody" id="vt">${esc(v.title||'')}</div>${cc(v.title,60)}
+        <div class="fbody" id="vt">${esc(v.title||'')}</div>
+        ${cc(v.title,60)}
       </div>
       <div class="div"></div>
       <div class="field">
-        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cpFull('v',this)">copy all</button></div>
-        <div class="fbody" id="vd">${esc(v.description_body||v.description||'')}</div>
-        <div style="margin-top:6px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:8px 12px;font-size:12px;font-family:'DM Mono',monospace;color:var(--t3);line-height:1.7;">
-          <span style="color:var(--t2);">↓ measurements &amp; storage code appended on copy</span>
-        </div>
+        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cp(document.getElementById('vd').textContent,this)">copy</button></div>
+        <div class="fbody" id="vd">${esc(vBody)}</div>
       </div>
+      <div class="div"></div>
+      <div class="field">
+        <div class="fhead"><span class="flbl">Measurements</span><span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);">fill in above ↑</span></div>
+        <div class="fbody" style="color:var(--t3);font-size:12px;font-family:'DM Mono',monospace;">${esc(measPlaceholder)}</div>
+      </div>
+      <div class="div"></div>
+      <div class="field">
+        <div class="fhead"><span class="flbl">Storage code</span><span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);">fill in above ↑</span></div>
+        <div class="fbody" style="color:var(--t3);font-size:12px;font-family:'DM Mono',monospace;">Storage code: ___</div>
+      </div>
+      <button style="width:100%;margin-top:14px;padding:13px;font-size:14px;font-weight:700;font-family:'Syne',sans-serif;border-radius:var(--r);background:var(--vbg);border:1px solid var(--vinted);color:var(--vinted);cursor:pointer;" onclick="cpFull('v',this)">Copy full Vinted listing</button>
       ${v.item_specifics&&Object.keys(v.item_specifics).some(k=>v.item_specifics[k])?`<div class="div"></div><div class="field"><div class="fhead"><span class="flbl">Item specifics</span></div><div class="specs">${specRows(v.item_specifics)}</div></div>`:''}
     </div></div>
 
@@ -795,15 +823,23 @@ function renderResults(d){
       ${seoBar(dp.seo_score)}
       <div class="field">
         <div class="fhead"><span class="flbl">Title</span><button class="cpbtn" onclick="cp(document.getElementById('dt').textContent,this)">copy</button></div>
-        <div class="fbody" id="dt">${esc(dp.title||'')}</div>${cc(dp.title,60)}
+        <div class="fbody" id="dt">${esc(dp.title||'')}</div>
+        ${cc(dp.title,60)}
       </div>
       <div class="div"></div>
       <div class="field">
-        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cpFull('d',this)">copy all</button></div>
-        <div class="fbody" id="dd">${esc(dp.description_body||dp.description||'')}</div>
-        <div style="margin-top:6px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:8px 12px;font-size:12px;font-family:'DM Mono',monospace;color:var(--t3);line-height:1.7;">
-          <span style="color:var(--t2);">↓ measurements &amp; storage code appended on copy</span>
-        </div>
+        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cp(document.getElementById('dd').textContent,this)">copy</button></div>
+        <div class="fbody" id="dd">${esc(dBody)}</div>
+      </div>
+      <div class="div"></div>
+      <div class="field">
+        <div class="fhead"><span class="flbl">Measurements</span><span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);">fill in above ↑</span></div>
+        <div class="fbody" style="color:var(--t3);font-size:12px;font-family:'DM Mono',monospace;">${esc(measPlaceholder)}</div>
+      </div>
+      <div class="div"></div>
+      <div class="field">
+        <div class="fhead"><span class="flbl">Storage code</span><span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);">fill in above ↑</span></div>
+        <div class="fbody" style="color:var(--t3);font-size:12px;font-family:'DM Mono',monospace;">Storage code: ___</div>
       </div>
       <div class="div"></div>
       <div class="field">
@@ -811,6 +847,7 @@ function renderResults(d){
         <div class="tags-wrap">${tags.map(t=>`<span class="htag" onclick="cp('#${esc(t.replace(/^#/,''))}',this)">#${esc(t.replace(/^#/,''))}</span>`).join('')}</div>
         <div class="tag-note">Tap tag to copy · Depop limit: 5 hashtags</div>
       </div>
+      <button style="width:100%;margin-top:14px;padding:13px;font-size:14px;font-weight:700;font-family:'Syne',sans-serif;border-radius:var(--r);background:var(--dbg);border:1px solid var(--depop);color:var(--depop);cursor:pointer;" onclick="cpFull('d',this)">Copy full Depop listing</button>
     </div></div>
 
     <!-- EBAY -->
@@ -819,16 +856,25 @@ function renderResults(d){
       ${seoBar(eb.seo_score)}
       <div class="field">
         <div class="fhead"><span class="flbl">Title</span><button class="cpbtn" onclick="cp(document.getElementById('et').textContent,this)">copy</button></div>
-        <div class="fbody" id="et">${esc(eb.title||'')}</div>${cc(eb.title,80)}
+        <div class="fbody" id="et">${esc(eb.title||'')}</div>
+        ${cc(eb.title,80)}
       </div>
       <div class="div"></div>
       <div class="field">
-        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cpFull('e',this)">copy all</button></div>
-        <div class="fbody" id="ed">${esc(eb.description_body||eb.description||'')}</div>
-        <div style="margin-top:6px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:8px 12px;font-size:12px;font-family:'DM Mono',monospace;color:var(--t3);line-height:1.7;">
-          <span style="color:var(--t2);">↓ measurements &amp; storage code appended on copy</span>
-        </div>
+        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cp(document.getElementById('ed').textContent,this)">copy</button></div>
+        <div class="fbody" id="ed">${esc(eBody)}</div>
       </div>
+      <div class="div"></div>
+      <div class="field">
+        <div class="fhead"><span class="flbl">Measurements</span><span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);">fill in above ↑</span></div>
+        <div class="fbody" style="color:var(--t3);font-size:12px;font-family:'DM Mono',monospace;">${esc(measPlaceholder)}</div>
+      </div>
+      <div class="div"></div>
+      <div class="field">
+        <div class="fhead"><span class="flbl">Storage code</span><span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);">fill in above ↑</span></div>
+        <div class="fbody" style="color:var(--t3);font-size:12px;font-family:'DM Mono',monospace;">Storage code: ___</div>
+      </div>
+      <button style="width:100%;margin-top:14px;padding:13px;font-size:14px;font-weight:700;font-family:'Syne',sans-serif;border-radius:var(--r);background:var(--ebg);border:1px solid var(--ebay);color:var(--ebay);cursor:pointer;" onclick="cpFull('e',this)">Copy full eBay listing</button>
       ${eb.item_specifics&&Object.keys(eb.item_specifics).some(k=>eb.item_specifics[k])?`<div class="div"></div><div class="field"><div class="fhead"><span class="flbl">Item specifics</span></div><div class="specs">${specRows(eb.item_specifics)}</div></div>`:''}
     </div></div>
 
