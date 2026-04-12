@@ -16,183 +16,225 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:      #0d0d0d;
-  --s1:      #161616;
-  --s2:      #1e1e1e;
-  --s3:      #272727;
-  --b1:      rgba(255,255,255,0.06);
-  --b2:      rgba(255,255,255,0.11);
-  --b3:      rgba(255,255,255,0.18);
-  --t1:      #f2ede6;
-  --t2:      #8c887f;
-  --t3:      #4a4845;
-  --gold:    #d4a853;
-  --gold-l:  #e8c47a;
-  --gold-bg: rgba(212,168,83,0.08);
-  --vinted:  #07c48a;
-  --vbg:     rgba(7,196,138,0.08);
-  --depop:   #ff3b1f;
-  --dbg:     rgba(255,59,31,0.08);
-  --ebay:    #f0a500;
-  --ebg:     rgba(240,165,0,0.08);
-  --ok:      #07c48a;
-  --err:     #ff4a35;
-  --r:       14px;
-  --rsm:     9px;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bot: env(safe-area-inset-bottom, 0px);
+  --bg:#0d0d0d;--s1:#161616;--s2:#1e1e1e;--s3:#272727;
+  --b1:rgba(255,255,255,0.06);--b2:rgba(255,255,255,0.11);--b3:rgba(255,255,255,0.18);
+  --t1:#f2ede6;--t2:#8c887f;--t3:#4a4845;
+  --gold:#d4a853;--gold-l:#e8c47a;--gold-bg:rgba(212,168,83,0.08);
+  --vinted:#07c48a;--vbg:rgba(7,196,138,0.08);
+  --depop:#ff3b1f;--dbg:rgba(255,59,31,0.08);
+  --ebay:#f0a500;--ebg:rgba(240,165,0,0.08);
+  --ok:#07c48a;--err:#ff4a35;--warn:#f0a500;
+  --r:14px;--rsm:9px;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html{background:var(--bg);height:-webkit-fill-available;}
-body{
-  font-family:'Syne',sans-serif;
-  background:var(--bg);
-  color:var(--t1);
-  min-height:100vh;
-  min-height:-webkit-fill-available;
-  overflow-x:hidden;
-  padding-bottom:calc(32px + var(--safe-bot));
-}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;min-height:-webkit-fill-available;overflow-x:hidden;padding-bottom:calc(80px + var(--safe-bot));}
 ::-webkit-scrollbar{width:0;background:transparent;}
-.app{
-  max-width:440px;
-  margin:0 auto;
-  padding:0 18px;
-  padding-top:calc(20px + var(--safe-top));
+
+/* ── Bottom nav ── */
+.bnav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--s1);
+  border-top:1px solid var(--b2);
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  padding-bottom:var(--safe-bot);
+  z-index:100;
 }
+.bnav-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:10px 4px 8px;
+  background:none;border:none;cursor:pointer;
+  font-size:10px;font-family:'DM Mono',monospace;letter-spacing:0.04em;
+  color:var(--t3);gap:4px;transition:color .15s;
+}
+.bnav-btn.on{color:var(--gold);}
+.bnav-btn svg{transition:stroke .15s;}
+.bnav-btn.on svg{stroke:var(--gold);}
 
-/* Header */
-.hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:26px;}
+/* ── Pages ── */
+.page{display:none;max-width:440px;margin:0 auto;padding:0 18px;padding-top:calc(20px + var(--safe-top));}
+.page.on{display:block;}
+
+/* ── Header ── */
+.hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;}
 .logo{font-family:'Instrument Serif',serif;font-size:28px;font-style:italic;color:var(--t1);letter-spacing:-0.02em;line-height:1;}
-.logo em{color:var(--gold);font-style:italic;}
+.logo em{color:var(--gold);}
 .tagline{font-family:'DM Mono',monospace;font-size:10px;color:var(--t3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;}
+.page-title{font-size:20px;font-weight:700;color:var(--t1);margin-bottom:20px;letter-spacing:-0.02em;}
 
-/* API key */
-#key-screen{margin-bottom:20px;}
-.key-card{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:20px;}
-.key-card h2{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--t1);}
+/* ── API key ── */
+.key-card{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:20px;margin-bottom:20px;}
+.key-card h2{font-size:15px;font-weight:700;margin-bottom:6px;}
 .key-card p{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:16px;}
 .key-card a{color:var(--gold);text-decoration:none;}
-.key-input{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:13px 14px;font-size:14px;font-family:'DM Mono',monospace;color:var(--t1);margin-bottom:10px;-webkit-appearance:none;appearance:none;}
+.key-input{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:13px 14px;font-size:14px;font-family:'DM Mono',monospace;color:var(--t1);margin-bottom:10px;-webkit-appearance:none;}
 .key-input:focus{outline:none;border-color:var(--gold);}
 .key-input::placeholder{color:var(--t3);}
-.key-save-btn{width:100%;padding:14px;font-size:14px;font-weight:700;font-family:'Syne',sans-serif;border-radius:var(--rsm);background:var(--gold);color:#0d0d0d;border:none;cursor:pointer;transition:opacity .15s;}
-.key-save-btn:active{opacity:.8;}
+.key-save-btn{width:100%;padding:14px;font-size:14px;font-weight:700;font-family:'Syne',sans-serif;border-radius:var(--rsm);background:var(--gold);color:#0d0d0d;border:none;cursor:pointer;}
 .key-active{display:flex;align-items:center;justify-content:space-between;background:rgba(7,196,138,0.07);border:1px solid rgba(7,196,138,0.18);border-radius:var(--rsm);padding:9px 13px;margin-bottom:18px;}
 .key-active-txt{font-size:12px;font-family:'DM Mono',monospace;color:var(--ok);}
-.key-change{font-size:11px;font-family:'DM Mono',monospace;color:var(--t3);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+.key-change{font-size:11px;font-family:'DM Mono',monospace;color:var(--t3);background:none;border:none;cursor:pointer;text-decoration:underline;}
 
-/* Upload */
-.upload-zone{border:1.5px dashed var(--b3);border-radius:var(--r);padding:32px 20px;text-align:center;cursor:pointer;background:var(--s1);transition:border-color .2s,background .2s;position:relative;overflow:hidden;}
+/* ── Upload ── */
+.upload-zone{border:1.5px dashed var(--b3);border-radius:var(--r);padding:28px 20px;text-align:center;background:var(--s1);transition:border-color .2s,background .2s;position:relative;overflow:hidden;}
 .upload-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(212,168,83,0.04) 0%,transparent 70%);pointer-events:none;}
 .upload-zone.drag{border-color:var(--gold);background:var(--gold-bg);}
-.upload-zone:active{background:var(--s2);}
-.upload-icon{width:40px;height:40px;margin:0 auto 12px;background:var(--s2);border-radius:10px;border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;}
-.upload-title{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:5px;}
+.upload-icon{width:40px;height:40px;margin:0 auto 10px;background:var(--s2);border-radius:10px;border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;}
+.upload-title{font-size:15px;font-weight:700;color:var(--t1);margin-bottom:4px;}
 .upload-sub{font-size:12px;font-family:'DM Mono',monospace;color:var(--t3);}
-
-/* Photo source buttons */
 .photo-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
-.photo-btn{padding:12px 8px;font-size:13px;font-weight:600;font-family:'Syne',sans-serif;border-radius:var(--rsm);border:1px solid var(--b2);background:var(--s2);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s;}
-.photo-btn:active{background:var(--s3);border-color:var(--b3);}
-.photo-btn svg{flex-shrink:0;}
-
-/* Thumbs */
+.photo-btn{padding:11px 8px;font-size:13px;font-weight:600;font-family:'Syne',sans-serif;border-radius:var(--rsm);border:1px solid var(--b2);background:var(--s2);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s;}
+.photo-btn:active{background:var(--s3);}
 .thumb-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px;}
 .thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:1px solid var(--b1);background:var(--s2);}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
 .thumb-rm{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,0.75);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;}
 .img-num{position:absolute;bottom:3px;left:4px;font-size:9px;font-family:'DM Mono',monospace;color:rgba(255,255,255,0.5);background:rgba(0,0,0,0.5);padding:1px 4px;border-radius:3px;}
-
-/* Generate button */
-.gen-btn{width:100%;margin-top:14px;padding:17px;font-size:16px;font-weight:800;font-family:'Syne',sans-serif;letter-spacing:0.01em;border-radius:var(--r);background:var(--gold);color:#0d0d0d;border:none;cursor:pointer;transition:opacity .15s,transform .1s;}
+.gen-btn{width:100%;margin-top:14px;padding:17px;font-size:16px;font-weight:800;font-family:'Syne',sans-serif;border-radius:var(--r);background:var(--gold);color:#0d0d0d;border:none;cursor:pointer;transition:opacity .15s,transform .1s;}
 .gen-btn:not(:disabled):active{transform:scale(0.98);opacity:.85;}
 .gen-btn:disabled{opacity:.22;cursor:not-allowed;}
 
-/* Loading */
-#loading{display:none;padding:40px 0;text-align:center;}
+/* ── Loading ── */
+#loading{display:none;padding:40px 0;text-align:center;max-width:440px;margin:0 auto;padding-left:18px;padding-right:18px;}
 .spinner{width:30px;height:30px;border:2px solid var(--b2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.load-msg{font-size:13px;font-family:'DM Mono',monospace;color:var(--t2);letter-spacing:0.02em;min-height:20px;}
+.load-msg{font-size:13px;font-family:'DM Mono',monospace;color:var(--t2);letter-spacing:0.02em;}
 
-/* Error */
+/* ── Error ── */
 .err-box{background:rgba(255,74,53,0.07);border:1px solid rgba(255,74,53,0.2);border-radius:var(--rsm);padding:13px 15px;font-size:13px;font-family:'DM Mono',monospace;color:var(--err);line-height:1.5;margin-top:14px;}
 
-/* Results */
+/* ── Results ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
-.results{animation:fadeUp .35s ease;}
+.results{animation:fadeUp .3s ease;}
 .item-pill{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:13px 16px;margin-bottom:14px;}
 .item-pill-name{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:4px;letter-spacing:-0.01em;}
 .item-pill-meta{font-size:11px;font-family:'DM Mono',monospace;color:var(--t2);line-height:1.7;}
 
+/* Storage code input */
+.storage-row{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:8px 12px;margin-top:8px;}
+.storage-lbl{font-size:11px;font-family:'DM Mono',monospace;color:var(--t3);white-space:nowrap;}
+.storage-input{flex:1;background:none;border:none;font-size:13px;font-family:'DM Mono',monospace;color:var(--gold-l);outline:none;}
+.storage-input::placeholder{color:var(--t3);}
+
 /* Tabs */
 .tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;}
-.tab{padding:11px 4px;font-size:13px;font-weight:700;font-family:'Syne',sans-serif;border-radius:var(--rsm);border:1px solid var(--b2);background:var(--s1);color:var(--t3);cursor:pointer;text-align:center;transition:all .15s;letter-spacing:0.01em;}
+.tab{padding:11px 4px;font-size:13px;font-weight:700;font-family:'Syne',sans-serif;border-radius:var(--rsm);border:1px solid var(--b2);background:var(--s1);color:var(--t3);cursor:pointer;text-align:center;transition:all .15s;}
 .tab-v.on{background:var(--vbg);border-color:var(--vinted);color:var(--vinted);}
 .tab-d.on{background:var(--dbg);border-color:var(--depop);color:var(--depop);}
 .tab-e.on{background:var(--ebg);border-color:var(--ebay);color:var(--ebay);}
-
-/* Panel */
-.panel{display:none;}
-.panel.on{display:block;animation:fadeUp .2s ease;}
-
-/* Card */
+.panel{display:none;}.panel.on{display:block;animation:fadeUp .2s ease;}
 .card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:18px;}
 .p-badge{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;padding:4px 11px;border-radius:20px;margin-bottom:16px;}
 .dot{width:6px;height:6px;border-radius:50%;}
 .bv{background:var(--vbg);color:var(--vinted);}.bv .dot{background:var(--vinted);}
 .bd{background:var(--dbg);color:var(--depop);}.bd .dot{background:var(--depop);}
 .be{background:var(--ebg);color:var(--ebay);}.be .dot{background:var(--ebay);}
-
-/* SEO score bar — FIXED: score is 0-100 */
 .seo-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
 .seo-lbl{font-size:9px;font-family:'DM Mono',monospace;color:var(--t3);letter-spacing:.1em;white-space:nowrap;}
 .seo-track{flex:1;height:3px;background:var(--b2);border-radius:2px;overflow:hidden;}
 .seo-fill{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.16,1,.3,1);}
 .seo-n{font-size:11px;font-weight:600;font-family:'DM Mono',monospace;min-width:28px;text-align:right;}
-
-/* Field */
-.field{margin-bottom:16px;}
-.field:last-child{margin-bottom:0;}
+.field{margin-bottom:16px;}.field:last-child{margin-bottom:0;}
 .fhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
 .flbl{font-size:10px;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:.08em;color:var(--t3);text-transform:uppercase;}
 .fbody{font-size:14px;color:var(--t1);line-height:1.65;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rsm);padding:11px 13px;white-space:pre-wrap;word-break:break-word;}
 .ccount{font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);text-align:right;margin-top:4px;}
-.ccount.w{color:var(--ebay);}
-.ccount.x{color:var(--err);}
-
-/* Copy button */
+.ccount.w{color:var(--warn);}.ccount.x{color:var(--err);}
 .cpbtn{font-size:11px;font-family:'DM Mono',monospace;padding:4px 11px;border-radius:6px;background:transparent;border:1px solid var(--b2);color:var(--t2);cursor:pointer;transition:all .12s;}
-.cpbtn:active{background:var(--s2);}
-.cpbtn.ok{border-color:var(--ok);color:var(--ok);}
-
-/* Hashtags */
+.cpbtn:active{background:var(--s2);}.cpbtn.ok{border-color:var(--ok);color:var(--ok);}
 .tags-wrap{display:flex;flex-wrap:wrap;gap:6px;}
-.htag{font-size:12px;font-family:'DM Mono',monospace;padding:5px 11px;border-radius:20px;background:var(--dbg);color:var(--depop);border:1px solid rgba(255,59,31,.18);cursor:pointer;transition:opacity .12s;}
+.htag{font-size:12px;font-family:'DM Mono',monospace;padding:5px 11px;border-radius:20px;background:var(--dbg);color:var(--depop);border:1px solid rgba(255,59,31,.18);cursor:pointer;}
 .htag:active{opacity:.6;}
 .tag-note{font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);margin-top:7px;}
-
-/* Specs */
 .specs{border:1px solid var(--b1);border-radius:var(--rsm);overflow:hidden;}
 .spec-row{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;border-bottom:1px solid var(--b1);gap:12px;}
 .spec-row:last-child{border-bottom:none;}
 .spec-k{font-size:11px;font-family:'DM Mono',monospace;color:var(--t2);flex-shrink:0;text-transform:capitalize;}
 .spec-v{font-size:12px;font-weight:600;color:var(--t1);text-align:right;max-width:60%;}
-
 .div{height:1px;background:var(--b1);margin:16px 0;}
 
-/* Reset */
-.reset-btn{width:100%;margin-top:12px;padding:14px;font-size:13px;font-family:'DM Mono',monospace;border-radius:var(--r);background:transparent;border:1px solid var(--b2);color:var(--t2);cursor:pointer;transition:background .15s;}
+/* Save to vault button */
+.save-vault-btn{width:100%;margin-top:10px;padding:13px;font-size:14px;font-weight:700;font-family:'Syne',sans-serif;border-radius:var(--r);background:var(--gold-bg);border:1px solid rgba(212,168,83,0.3);color:var(--gold-l);cursor:pointer;transition:all .15s;}
+.save-vault-btn:active{background:rgba(212,168,83,0.15);}
+.save-vault-btn.saved{background:rgba(7,196,138,0.08);border-color:rgba(7,196,138,0.25);color:var(--ok);}
+.reset-btn{width:100%;margin-top:8px;padding:13px;font-size:13px;font-family:'DM Mono',monospace;border-radius:var(--r);background:transparent;border:1px solid var(--b2);color:var(--t2);cursor:pointer;}
 .reset-btn:active{background:var(--s2);}
 
-/* A2HS tip */
-.a2hs{background:var(--gold-bg);border:1px solid rgba(212,168,83,.2);border-radius:var(--rsm);padding:11px 14px;font-size:12px;font-family:'DM Mono',monospace;color:var(--gold-l);line-height:1.6;margin-bottom:20px;display:none;}
-.a2hs-close{float:right;background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;margin-left:8px;line-height:1;}
+/* ── Vault page ── */
+.vault-empty{text-align:center;padding:60px 20px;color:var(--t3);font-family:'DM Mono',monospace;font-size:13px;line-height:1.8;}
+.vault-item{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;animation:fadeUp .25s ease;}
+.vault-item-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;}
+.vault-item-name{font-size:14px;font-weight:700;color:var(--t1);letter-spacing:-0.01em;}
+.vault-item-meta{font-size:11px;font-family:'DM Mono',monospace;color:var(--t2);margin-top:2px;}
+.vault-item-date{font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);white-space:nowrap;}
+.vault-actions{display:flex;gap:6px;margin-top:10px;}
+.vault-btn{flex:1;padding:8px 6px;font-size:11px;font-family:'DM Mono',monospace;border-radius:var(--rsm);border:1px solid var(--b2);background:transparent;color:var(--t2);cursor:pointer;text-align:center;}
+.vault-btn:active{background:var(--s2);}
+.vault-btn.del{color:var(--err);border-color:rgba(255,74,53,0.2);}
+.vault-btn.sold-btn{color:var(--ok);border-color:rgba(7,196,138,0.2);}
+.vault-status{display:inline-block;font-size:10px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:20px;margin-left:8px;}
+.status-listed{background:var(--vbg);color:var(--vinted);}
+.status-sold{background:rgba(212,168,83,0.1);color:var(--gold-l);}
+
+/* Sold modal overlay */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:flex-end;justify-content:center;}
+.modal-overlay.on{display:flex;}
+.modal{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r) var(--r) 0 0;padding:24px 20px;width:100%;max-width:440px;padding-bottom:calc(24px + var(--safe-bot));}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:16px;}
+.modal-label{font-size:11px;font-family:'DM Mono',monospace;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;margin-top:14px;}
+.modal-input{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:12px 14px;font-size:15px;font-family:'DM Mono',monospace;color:var(--t1);-webkit-appearance:none;}
+.modal-input:focus{outline:none;border-color:var(--gold);}
+.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:20px;}
+.modal-cancel{padding:13px;font-size:13px;font-family:'DM Mono',monospace;border-radius:var(--rsm);border:1px solid var(--b2);background:transparent;color:var(--t2);cursor:pointer;}
+.modal-save{padding:13px;font-size:14px;font-weight:700;font-family:'Syne',sans-serif;border-radius:var(--rsm);background:var(--gold);color:#0d0d0d;border:none;cursor:pointer;}
+
+/* ── Analytics page ── */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
+.stat-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:14px;}
+.stat-lbl{font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.stat-val{font-size:24px;font-weight:700;color:var(--t1);letter-spacing:-0.03em;line-height:1;}
+.stat-sub{font-size:11px;font-family:'DM Mono',monospace;color:var(--t2);margin-top:4px;}
+.section-lbl{font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.rank-item{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.rank-num{font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--t3);min-width:20px;}
+.rank-num.top{color:var(--gold);}
+.rank-info{flex:1;min-width:0;}
+.rank-name{font-size:13px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rank-meta{font-size:11px;font-family:'DM Mono',monospace;color:var(--t2);margin-top:2px;}
+.rank-profit{font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ok);white-space:nowrap;}
+.rank-profit.neg{color:var(--err);}
+.analytics-empty{text-align:center;padding:60px 20px;color:var(--t3);font-family:'DM Mono',monospace;font-size:13px;line-height:1.8;}
+.platform-breakdown{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:20px;}
+.plat-stat{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rsm);padding:10px 12px;text-align:center;}
+.plat-stat-val{font-size:18px;font-weight:700;color:var(--t1);}
+.plat-stat-lbl{font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);margin-top:3px;}
+
+/* A2HS */
+.a2hs{background:var(--gold-bg);border:1px solid rgba(212,168,83,.2);border-radius:var(--rsm);padding:11px 14px;font-size:12px;font-family:'DM Mono',monospace;color:var(--gold-l);line-height:1.6;margin-bottom:18px;display:none;}
+.a2hs-close{float:right;background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;margin-left:8px;}
 </style>
 </head>
 <body>
-<div class="app">
 
+<!-- Bottom nav -->
+<nav class="bnav">
+  <button class="bnav-btn on" id="nav-generate" onclick="goPage('generate')">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6"/></svg>
+    Generate
+  </button>
+  <button class="bnav-btn" id="nav-vault" onclick="goPage('vault')">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="3"/><path d="M12 9V7M12 17v-2M9 12H7M17 12h-2"/></svg>
+    Vault
+  </button>
+  <button class="bnav-btn" id="nav-analytics" onclick="goPage('analytics')">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Analytics
+  </button>
+</nav>
+
+<!-- ══════════════ GENERATE PAGE ══════════════ -->
+<div class="page on" id="page-generate">
   <div class="hdr">
     <div class="logo">List<em>AI</em></div>
     <div class="tagline">Vinted · Depop · eBay</div>
@@ -200,14 +242,13 @@ body{
 
   <div class="a2hs" id="a2hs">
     <button class="a2hs-close" onclick="dismissA2hs()">✕</button>
-    Tip: in Safari tap the Share button then <strong>"Add to Home Screen"</strong> for a native app icon.
+    Tip: in Safari tap Share → <strong>"Add to Home Screen"</strong> for a native app icon.
   </div>
 
-  <!-- API key -->
   <div id="key-screen">
     <div class="key-card">
       <h2>Enter your API key</h2>
-      <p>You need a free Anthropic API key. Get one at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> — costs ~£0.02 per item.</p>
+      <p>Get a free Anthropic API key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> — costs ~£0.02 per item.</p>
       <input class="key-input" type="password" id="ki" placeholder="sk-ant-api03-..." autocomplete="off" autocorrect="off" spellcheck="false">
       <button class="key-save-btn" onclick="saveKey()">Save &amp; continue</button>
     </div>
@@ -217,44 +258,26 @@ body{
     <button class="key-change" onclick="clearKey()">change key</button>
   </div>
 
-  <!-- Main UI -->
   <div id="main" style="display:none;">
     <div class="upload-zone" id="dz">
       <div class="upload-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8">
-          <rect x="3" y="3" width="18" height="18" rx="3"/>
-          <path d="M3 15l5-5 4 4 3-3 6 6"/>
-          <circle cx="8.5" cy="8.5" r="1.5" fill="var(--gold)" stroke="none"/>
-        </svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="8.5" cy="8.5" r="1.5" fill="var(--gold)" stroke="none"/></svg>
       </div>
       <div class="upload-title">Add item photos</div>
-      <div class="upload-sub">up to 10 images per item</div>
+      <div class="upload-sub">up to 10 images · include label for best results</div>
     </div>
-
-    <!-- Separate buttons for camera and library — iOS friendly -->
     <div class="photo-btns">
       <button class="photo-btn" onclick="document.getElementById('fi-lib').click()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <rect x="2" y="2" width="20" height="20" rx="3"/>
-          <path d="M2 14l5-5 4 4 3-3 8 8"/>
-          <circle cx="8" cy="8" r="2" fill="currentColor" stroke="none"/>
-        </svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="3"/><path d="M2 14l5-5 4 4 3-3 8 8"/><circle cx="8" cy="8" r="2" fill="currentColor" stroke="none"/></svg>
         Camera roll
       </button>
       <button class="photo-btn" onclick="document.getElementById('fi-cam').click()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         Camera
       </button>
     </div>
-
-    <!-- Camera roll input — no capture attribute -->
     <input type="file" id="fi-lib" accept="image/*" multiple style="display:none">
-    <!-- Camera input — capture forces camera directly -->
     <input type="file" id="fi-cam" accept="image/*" capture="environment" style="display:none">
-
     <div class="thumb-grid" id="tg"></div>
     <button class="gen-btn" id="gbtn" disabled onclick="generate()">Generate listings</button>
   </div>
@@ -263,15 +286,70 @@ body{
     <div class="spinner"></div>
     <div class="load-msg" id="lmsg">Analysing your item...</div>
   </div>
-
   <div id="err"></div>
   <div id="results"></div>
+</div>
 
+<!-- ══════════════ VAULT PAGE ══════════════ -->
+<div class="page" id="page-vault">
+  <div class="page-title">Vault</div>
+  <div id="vault-list"></div>
+</div>
+
+<!-- ══════════════ ANALYTICS PAGE ══════════════ -->
+<div class="page" id="page-analytics">
+  <div class="page-title">Analytics</div>
+  <div id="analytics-content"></div>
+</div>
+
+<!-- Sold modal -->
+<div class="modal-overlay" id="sold-modal">
+  <div class="modal">
+    <h3>Mark as sold</h3>
+    <div class="modal-label">Sale price (£)</div>
+    <input class="modal-input" type="number" id="sale-price" placeholder="0.00" step="0.01" min="0">
+    <div class="modal-label">Purchase / cost price (£)</div>
+    <input class="modal-input" type="number" id="cost-price" placeholder="0.00" step="0.01" min="0">
+    <div class="modal-label">Platform sold on</div>
+    <select class="modal-input" id="sale-platform" style="cursor:pointer;">
+      <option value="vinted">Vinted</option>
+      <option value="depop">Depop</option>
+      <option value="ebay">eBay</option>
+      <option value="other">Other</option>
+    </select>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeSoldModal()">Cancel</button>
+      <button class="modal-save" onclick="confirmSold()">Save sale</button>
+    </div>
+  </div>
 </div>
 
 <script>
-// ── Key ────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
 const KEY_STORE='listai_key';
+const VAULT_STORE='listai_vault';
+let files=[];
+let currentResult=null;
+let soldTargetId=null;
+
+// ══════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════
+function goPage(p){
+  ['generate','vault','analytics'].forEach(x=>{
+    document.getElementById('page-'+x).classList.toggle('on',x===p);
+    document.getElementById('nav-'+x).classList.toggle('on',x===p);
+  });
+  if(p==='vault') renderVault();
+  if(p==='analytics') renderAnalytics();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+// ══════════════════════════════════════════════════════
+// API KEY
+// ══════════════════════════════════════════════════════
 function getKey(){return localStorage.getItem(KEY_STORE)||'';}
 function saveKey(){
   const v=document.getElementById('ki').value.trim();
@@ -287,65 +365,19 @@ function initKey(){
 }
 initKey();
 
-// ── A2HS ───────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// A2HS TIP
+// ══════════════════════════════════════════════════════
 (function(){
   const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isStandalone=window.navigator.standalone;
-  const dismissed=localStorage.getItem('a2hs_ok');
-  if(isIOS&&!isStandalone&&!dismissed) document.getElementById('a2hs').style.display='block';
+  if(isIOS&&!window.navigator.standalone&&!localStorage.getItem('a2hs_ok'))
+    document.getElementById('a2hs').style.display='block';
 })();
 function dismissA2hs(){document.getElementById('a2hs').style.display='none';localStorage.setItem('a2hs_ok','1');}
 
-// ── Files ──────────────────────────────────────────────────────────────────
-let files=[];
-function toB64(f){
-  return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f);});
-}
-
-// Resize + compress image to stay under 4MB (safe headroom below 5MB API limit)
-function compressImage(f){
-  return new Promise((res,rej)=>{
-    const url=URL.createObjectURL(f);
-    const img=new Image();
-    img.onload=()=>{
-      URL.revokeObjectURL(url);
-      const MAX_PX=1600; // max dimension in pixels
-      const MAX_BYTES=3.8*1024*1024; // 3.8MB target — safe under 5MB limit
-      let w=img.width, h=img.height;
-
-      // Scale down if either dimension exceeds MAX_PX
-      if(w>MAX_PX||h>MAX_PX){
-        if(w>h){ h=Math.round(h*(MAX_PX/w)); w=MAX_PX; }
-        else    { w=Math.round(w*(MAX_PX/h)); h=MAX_PX; }
-      }
-
-      const canvas=document.createElement('canvas');
-      canvas.width=w; canvas.height=h;
-      const ctx=canvas.getContext('2d');
-      ctx.drawImage(img,0,0,w,h);
-
-      // Try progressively lower quality until under MAX_BYTES
-      let quality=0.88;
-      const tryEncode=()=>{
-        canvas.toBlob(blob=>{
-          if(!blob){rej(new Error('Canvas toBlob failed'));return;}
-          if(blob.size<=MAX_BYTES||quality<=0.3){
-            const r=new FileReader();
-            r.onload=()=>res({base64:r.result.split(',')[1],type:'image/jpeg'});
-            r.onerror=rej;
-            r.readAsDataURL(blob);
-          } else {
-            quality-=0.1;
-            tryEncode();
-          }
-        },'image/jpeg',quality);
-      };
-      tryEncode();
-    };
-    img.onerror=rej;
-    img.src=url;
-  });
-}
+// ══════════════════════════════════════════════════════
+// FILE HANDLING
+// ══════════════════════════════════════════════════════
 function addFiles(incoming){
   files=files.concat(Array.from(incoming)).slice(0,10);
   renderThumbs();
@@ -361,69 +393,71 @@ function renderThumbs(){
   document.getElementById('gbtn').disabled=files.length===0;
 }
 function rmFile(i){files.splice(i,1);renderThumbs();}
-
 document.getElementById('fi-lib').addEventListener('change',e=>{addFiles(e.target.files);e.target.value='';});
 document.getElementById('fi-cam').addEventListener('change',e=>{addFiles(e.target.files);e.target.value='';});
-
-// Drag and drop for desktop
 const dz=document.getElementById('dz');
 dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
 dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
-dz.addEventListener('drop',e=>{
-  e.preventDefault();dz.classList.remove('drag');
-  addFiles(Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/')));
-});
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');addFiles(Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/')));});
 
-// ── Copy ───────────────────────────────────────────────────────────────────
-function cp(text,btn){
-  const done=()=>{const o=btn.textContent;btn.textContent='copied';btn.classList.add('ok');setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},1700);};
-  if(navigator.clipboard){navigator.clipboard.writeText(text).then(done).catch(()=>cpFb(text,done));}
-  else cpFb(text,done);
-}
-function cpFb(text,cb){
-  const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;';
-  document.body.appendChild(ta);ta.focus();ta.select();
-  try{document.execCommand('copy');cb();}catch(e){}
-  document.body.removeChild(ta);
-}
-
-// ── UI helpers ─────────────────────────────────────────────────────────────
-function cc(text,limit){
-  const l=(text||'').length;
-  const cls=l>limit?'x':l>limit*.88?'w':'';
-  return `<div class="ccount ${cls}">${l} / ${limit}</div>`;
-}
-
-// FIXED: score is already 0-100, just use directly as percentage
-function seoBar(rawScore){
-  // Clamp to 0-100 in case model returns something odd
-  const s=Math.min(100,Math.max(0,Number(rawScore)||0));
-  const c=s>=80?'var(--ok)':s>=60?'var(--ebay)':'var(--err)';
-  const label=s>=80?'Strong':s>=60?'Good':'Needs work';
-  return `<div class="seo-row">
-    <span class="seo-lbl">SEO</span>
-    <div class="seo-track"><div class="seo-fill" style="width:${s}%;background:${c};"></div></div>
-    <span class="seo-n" style="color:${c};">${s}<span style="font-size:9px;opacity:.6;margin-left:2px;">/100</span></span>
-  </div>`;
-}
-
-function specs(obj){
-  return Object.entries(obj).filter(([,v])=>v).map(([k,v])=>`<div class="spec-row"><span class="spec-k">${k.replace(/_/g,' ')}</span><span class="spec-v">${esc(String(v))}</span></div>`).join('');
-}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function showTab(p){
-  ['v','d','e'].forEach(x=>{
-    document.getElementById('tab-'+x).className='tab tab-'+x+(x===p?' on':'');
-    const el=document.getElementById('panel-'+x);
-    if(el)el.className='panel'+(x===p?' on':'');
+// ══════════════════════════════════════════════════════
+// IMAGE COMPRESSION — keeps every photo under 4MB
+// ══════════════════════════════════════════════════════
+function compressImage(f){
+  return new Promise((res,rej)=>{
+    const url=URL.createObjectURL(f);
+    const img=new Image();
+    img.onload=()=>{
+      URL.revokeObjectURL(url);
+      const MAX_PX=1600,MAX_BYTES=3.8*1024*1024;
+      let w=img.width,h=img.height;
+      if(w>MAX_PX||h>MAX_PX){if(w>h){h=Math.round(h*(MAX_PX/w));w=MAX_PX;}else{w=Math.round(w*(MAX_PX/h));h=MAX_PX;}}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      let q=0.88;
+      const go=()=>c.toBlob(b=>{
+        if(!b){rej(new Error('Compression failed'));return;}
+        if(b.size<=MAX_BYTES||q<=0.3){const r=new FileReader();r.onload=()=>res({base64:r.result.split(',')[1],type:'image/jpeg'});r.onerror=rej;r.readAsDataURL(b);}
+        else{q-=0.1;go();}
+      },'image/jpeg',q);
+      go();
+    };
+    img.onerror=rej;img.src=url;
   });
 }
 
-// ── Loading messages ───────────────────────────────────────────────────────
-const MSGS=['Studying labels and fabric...','Identifying brand, era and condition...','Building your Vinted listing...','Crafting Depop copy...','Maximising your eBay title...','Applying platform SEO rules...'];
+// ══════════════════════════════════════════════════════
+// COPY
+// ══════════════════════════════════════════════════════
+function cp(text,btn){
+  const done=()=>{const o=btn.textContent;btn.textContent='copied';btn.classList.add('ok');setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},1700);};
+  if(navigator.clipboard)navigator.clipboard.writeText(text).then(done).catch(()=>cpFb(text,done));
+  else cpFb(text,done);
+}
+function cpFb(text,cb){const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');cb();}catch(e){}document.body.removeChild(ta);}
+
+// ══════════════════════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════════════════════
+function cc(text,limit){const l=(text||'').length;const cls=l>limit?'x':l>limit*.88?'w':'';return `<div class="ccount ${cls}">${l} / ${limit}</div>`;}
+function seoBar(raw){
+  const s=Math.min(100,Math.max(0,Number(raw)||0));
+  const c=s>=80?'var(--ok)':s>=60?'var(--warn)':'var(--err)';
+  return `<div class="seo-row"><span class="seo-lbl">SEO</span><div class="seo-track"><div class="seo-fill" style="width:${s}%;background:${c};"></div></div><span class="seo-n" style="color:${c};">${s}<span style="font-size:9px;opacity:.6;margin-left:1px;">/100</span></span></div>`;
+}
+function specRows(obj){return Object.entries(obj).filter(([,v])=>v).map(([k,v])=>`<div class="spec-row"><span class="spec-k">${k.replace(/_/g,' ')}</span><span class="spec-v">${esc(String(v))}</span></div>`).join('');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function showTab(p){['v','d','e'].forEach(x=>{document.getElementById('rtab-'+x).className='tab tab-'+x+(x===p?' on':'');const el=document.getElementById('rpanel-'+x);if(el)el.className='panel'+(x===p?' on':'');});}
+
+// ══════════════════════════════════════════════════════
+// LOADING MESSAGES
+// ══════════════════════════════════════════════════════
+const MSGS=['Studying labels and construction...','Identifying brand, era and condition...','Building your Vinted listing...','Crafting Depop copy...','Maximising your eBay title...','Applying platform SEO rules...'];
 let mi=0,mt;
 
-// ── Generate ───────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// GENERATE
+// ══════════════════════════════════════════════════════
 async function generate(){
   const key=getKey();if(!key){clearKey();return;}
   document.getElementById('err').innerHTML='';
@@ -439,100 +473,65 @@ async function generate(){
       return {type:'image',source:{type:'base64',media_type:type,data:base64}};
     }));
 
-    const prompt=`You are the world's best resell SEO copywriter. Your listings get top search placement every time. Analyse every photo provided — look for labels, tags, stitching, branding, and construction details.
+    const prompt=`You are the world's best resell SEO copywriter. Analyse every photo carefully — study labels, tags, stitching, branding, construction, and any visible measurements or size markings.
 
-Return ONLY raw valid JSON. No markdown fences. No explanation. Just the JSON object.
+Return ONLY raw valid JSON. No markdown. No explanation. Just the JSON object.
 
-YOUR MISSION: Produce listings that rank #1 on each platform. Every character of every title must work hard. Every keyword must be a real search term buyers use. No wasted space, no vague words.
+CRITICAL RULE ON MEASUREMENTS:
+Only include measurements if you can actually read them from a label, tape measure, or size guide visible in the photos. If you cannot see measurements clearly DO NOT guess or include them. Leave measurements as null. A listing with no measurements is better than one with wrong measurements.
 
-═══════════════════════════════════════
-VINTED — PRO SELLER RULES
-═══════════════════════════════════════
-TITLE (max 60 chars — aim for 55-60, every character counts):
-- Structure: [Brand] [Item type] [Key descriptor] [Size] [Era/Style]
-- Use real buyer search language. Buyers search "vintage champion tee L 90s" not "nice top"
-- Include size in the title — hugely increases click-through
-- Sentence case, no ALL CAPS
+CRITICAL RULE ON STORAGE CODE:
+Always include exactly this placeholder text for storage code in descriptions: [STORAGE CODE: ___] — the seller will fill this in manually.
 
-DESCRIPTION (target 500-700 chars):
-- Line 1: Condition statement — be specific ("No holes, slight fading to print, collar is perfect")
-- Line 2-3: Item description — brand story, construction details, what makes it special
-- Line 4: Style/occasion ("Perfect for streetwear, festival, or vintage layering looks")
-- Line 5: Measurements — Chest: Xcm, Length: Xcm, Shoulders: Xcm (estimate from photos)
-- Line 6: Practical — "Machine washable. Same/next day tracked postage."
-- ZERO hashtags — Vinted penalises them
-- Sprinkle buyer search terms naturally: vintage, oversized, y2k, 90s, retro, bundle, rare
+PLATFORM SEO RULES:
 
-SEO SCORE: Rate 0-100 based on: keyword density in title (30pts), title length 55-60 chars (20pts), description quality and length (30pts), search terms included (20pts)
+VINTED — PRO SELLER:
+Title (55-60 chars): [Brand] [Item type] [Key descriptor] [Size] [Era/Style]
+Description (500-700 chars):
+- Condition: specific honest statement
+- Item details: brand, style, what makes it special
+- Occasion/styling: who it suits, how to wear it
+- Measurements: ONLY if visible in photos — if not, omit entirely
+- Storage: [STORAGE CODE: ___]
+- Postage: same/next day tracked
+- NO hashtags whatsoever
+SEO score 0-100: keyword density in title (30pts) + title 55-60 chars (20pts) + description quality (30pts) + buyer search terms (20pts)
 
-═══════════════════════════════════════
-DEPOP — BUSINESS SELLER RULES
-═══════════════════════════════════════
-TITLE (max 60 chars — aim for 55-60):
-- Lead with the aesthetic/era label buyers search: "Vintage 90s", "Y2K", "Grunge", "Indie"
-- Then brand + item type
-- End with a size or key descriptor
-- Example: "Vintage 90s Champion striped jersey shirt L"
+DEPOP — BUSINESS SELLER:
+Title (55-60 chars): [Era/Aesthetic] [Brand] [Item type] [Size]
+Description (300-450 chars):
+- Line 1: punchy vibe sentence
+- Line 2: colour, key details, construction
+- Line 3: measurements ONLY if visible — omit if not
+- Line 4: condition
+- Line 5: [STORAGE CODE: ___]
+- NO hashtags in description body
+Hashtags: EXACTLY 5 — brand + item type + aesthetic + era + style
+SEO score: aesthetic keyword in title (30pts) + title length (20pts) + hashtag quality (30pts) + description (20pts)
 
-DESCRIPTION (target 300-450 chars):
-- Tone: cool, visual, confident. Like a good Depop seller you'd actually follow.
-- Line 1: The vibe — one punchy sentence ("Classic 90s Champion baseball jersey — the real deal.")
-- Line 2: Key details — colour, construction, what stands out
-- Line 3: Measurements — just the essentials (Chest: Xcm, Length: Xcm)
-- Line 4: Condition note — honest and brief
-- NO hashtags in the description body — they go in the separate hashtags field only
-
-HASHTAGS — EXACTLY 5, no more, no fewer (Depop's hard platform limit):
-- Choose maximum-impact tags only
-- Pick from: brand name, item type, dominant aesthetic (e.g. vintage, y2k, grunge, streetwear, indie, cottagecore), era (e.g. 90s, 00s), one broad style term
-- No # prefix in the array values
-
-SEO SCORE: Rate 0-100 based on: aesthetic keyword in title (30pts), title length (20pts), hashtag relevance (30pts), description punchy and visual (20pts)
-
-═══════════════════════════════════════
-EBAY — BUSINESS SELLER RULES
-═══════════════════════════════════════
-TITLE — THIS IS CRITICAL. Target EXACTLY 75-80 characters. Count every single character.
-- eBay's Cassini search engine indexes every word. More characters = more indexed keywords = more visibility.
-- Pattern: [Brand] [Item Type] [Descriptor] [Size] [Colour] [Era] [Condition keywords]
-- NO punctuation except hyphens between compound words
-- NO filler words: no "a", "the", "and", "for", "in", "with"
-- ALL keywords buyers search: men's/women's, vintage, retro, rare, Y2K etc where applicable
-- Example of a maxed-out title: "Champion Striped Baseball Jersey Shirt Mens Large White Navy Vintage 90s Streetwear"
-- Count the characters above: that example is 83 chars — trim to 75-80
-
-DESCRIPTION (target 800-1200 chars, structured):
-Section 1 — ITEM OVERVIEW (2-3 sentences): Brand history/prestige if relevant, what the item is, why it's desirable
-Section 2 — ITEM DETAILS (bullet-style with line breaks):
-• Brand: [brand]
-• Type: [item type]
-• Colour: [colour(s)]
-• Size: [size label] (UK [size])
-• Material: [material]
-• Era/Style: [era]
-Section 3 — MEASUREMENTS:
-Chest: Xcm | Length: Xcm | Shoulders: Xcm (estimate from photos — say "approx." if estimated)
-Section 4 — CONDITION: Detailed honest condition. Mention any flaws specifically. "Graded Very Good — [details]"
-Section 5 — POSTAGE & RETURNS: "Dispatched same or next working day with tracked postage. Returns accepted within 30 days."
-Repeat 3-4 high-value keywords naturally throughout.
-
-ITEM SPECIFICS: Fill every single field. eBay buries listings with incomplete specifics.
-
-SEO SCORE: Rate 0-100 based on: title character count 75-80 (35pts), keyword saturation in title (25pts), description completeness (25pts), item specifics filled (15pts)
-
-═══════════════════════════════════════
+EBAY — BUSINESS SELLER:
+Title (75-80 chars — count every character): Brand + ItemType + Descriptor + Size + Colour + Era + Keywords. No punctuation except hyphens. No filler words.
+Description (800-1200 chars):
+Section 1 — Overview: what it is, brand credentials, why desirable
+Section 2 — Details: Brand / Type / Colour / Size / Material / Era (each on own line with •)
+Section 3 — Measurements: ONLY if visible in photos. If not visible, write "Measurements: Please refer to size label — [size label here]" instead
+Section 4 — Condition: honest graded statement with specifics
+Section 5 — Storage: [STORAGE CODE: ___]
+Section 6 — Postage: dispatched same/next day tracked, returns 30 days
+Item specifics: fill every field
+SEO score: title 75-80 chars (35pts) + keyword density (25pts) + description completeness (25pts) + specifics filled (15pts)
 
 {
   "item": {
-    "brand": "exact brand or Unknown Brand",
-    "type": "specific item e.g. oversized baseball jersey",
-    "colour": "precise colour e.g. white with navy pinstripes",
-    "size_label": "size as on label",
+    "brand": "brand or Unknown Brand",
+    "type": "specific item type",
+    "colour": "precise colour",
+    "size_label": "size on label",
     "size_uk": "UK equivalent",
-    "material": "composition if visible",
-    "condition": "Excellent / Very Good / Good / Fair",
-    "era": "e.g. 1990s, Y2K, early 2000s",
-    "measurements": "Chest: Xcm, Length: Xcm, Shoulders: Xcm"
+    "material": "if visible else null",
+    "condition": "Excellent/Very Good/Good/Fair",
+    "era": "decade or aesthetic",
+    "measurements_visible": false
   },
   "vinted": {
     "title": "",
@@ -556,28 +555,17 @@ SEO SCORE: Rate 0-100 based on: title character count 75-80 (35pts), keyword sat
 
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':key,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:2000,
-        messages:[{role:'user',content:[...imgs,{type:'text',text:prompt}]}]
-      })
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:[...imgs,{type:'text',text:prompt}]}]})
     });
 
     const data=await resp.json();
-    if(!resp.ok) throw new Error(data.error?.message||`API error ${resp.status}`);
+    if(!resp.ok)throw new Error(data.error?.message||`API error ${resp.status}`);
     const raw=data.content.map(b=>b.text||'').join('');
-    const clean=raw.replace(/```json|```/g,'').trim();
-    const d=JSON.parse(clean);
+    const d=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    if(d.depop?.hashtags?.length>5)d.depop.hashtags=d.depop.hashtags.slice(0,5);
 
-    // Hard enforce limits
-    if(d.depop?.hashtags?.length>5) d.depop.hashtags=d.depop.hashtags.slice(0,5);
-
+    currentResult=d;
     clearInterval(mt);
     document.getElementById('loading').style.display='none';
     document.getElementById('main').style.display='block';
@@ -593,113 +581,319 @@ SEO SCORE: Rate 0-100 based on: title character count 75-80 (35pts), keyword sat
   }
 }
 
-// ── Render ─────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+// RENDER RESULTS
+// ══════════════════════════════════════════════════════
 function renderResults(d){
   const it=d.item||{},v=d.vinted||{},dp=d.depop||{},eb=d.ebay||{};
   const tags=(dp.hashtags||[]).slice(0,5);
   const metaParts=[it.colour,it.size_label?`Size ${it.size_label}`:'',it.size_uk?`UK ${it.size_uk}`:'',it.condition,it.era].filter(Boolean);
 
-  const html=`<div class="results">
+  document.getElementById('results').innerHTML=`<div class="results">
     <div class="item-pill">
       <div class="item-pill-name">${esc(it.brand||'Unknown')} ${esc(it.type||'')}</div>
-      <div class="item-pill-meta">${metaParts.map(esc).join(' · ')}${it.measurements?'\n'+esc(it.measurements):''}</div>
+      <div class="item-pill-meta">${metaParts.map(esc).join(' · ')}</div>
+      <div class="storage-row">
+        <span class="storage-lbl">Storage code</span>
+        <input class="storage-input" id="storage-code-input" type="text" placeholder="Enter your code..." maxlength="30">
+      </div>
     </div>
 
     <div class="tabs">
-      <button class="tab tab-v on" id="tab-v" onclick="showTab('v')">Vinted</button>
-      <button class="tab tab-d" id="tab-d" onclick="showTab('d')">Depop</button>
-      <button class="tab tab-e" id="tab-e" onclick="showTab('e')">eBay</button>
+      <button class="tab tab-v on" id="rtab-v" onclick="showTab('v')">Vinted</button>
+      <button class="tab tab-d" id="rtab-d" onclick="showTab('d')">Depop</button>
+      <button class="tab tab-e" id="rtab-e" onclick="showTab('e')">eBay</button>
     </div>
 
     <!-- VINTED -->
-    <div class="panel on" id="panel-v"><div class="card">
+    <div class="panel on" id="rpanel-v"><div class="card">
       <div class="p-badge bv"><span class="dot"></span>Vinted · Pro seller</div>
       ${seoBar(v.seo_score)}
       <div class="field">
         <div class="fhead"><span class="flbl">Title</span><button class="cpbtn" onclick="cp(document.getElementById('vt').textContent,this)">copy</button></div>
-        <div class="fbody" id="vt">${esc(v.title||'')}</div>
-        ${cc(v.title,60)}
+        <div class="fbody" id="vt">${esc(v.title||'')}</div>${cc(v.title,60)}
       </div>
       <div class="div"></div>
       <div class="field">
-        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cp(document.getElementById('vd').textContent,this)">copy</button></div>
-        <div class="fbody" id="vd">${esc(v.description||'')}</div>
-        ${cc(v.description,800)}
+        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cpWithStorage('vd',this)">copy</button></div>
+        <div class="fbody" id="vd">${esc(v.description||'')}</div>${cc(v.description,800)}
       </div>
-      ${v.item_specifics&&Object.keys(v.item_specifics).some(k=>v.item_specifics[k])?`
-      <div class="div"></div>
-      <div class="field">
-        <div class="fhead"><span class="flbl">Item specifics</span></div>
-        <div class="specs">${specs(v.item_specifics)}</div>
-      </div>`:''}
+      ${v.item_specifics&&Object.keys(v.item_specifics).some(k=>v.item_specifics[k])?`<div class="div"></div><div class="field"><div class="fhead"><span class="flbl">Item specifics</span></div><div class="specs">${specRows(v.item_specifics)}</div></div>`:''}
     </div></div>
 
     <!-- DEPOP -->
-    <div class="panel" id="panel-d"><div class="card">
+    <div class="panel" id="rpanel-d"><div class="card">
       <div class="p-badge bd"><span class="dot"></span>Depop · Business seller</div>
       ${seoBar(dp.seo_score)}
       <div class="field">
         <div class="fhead"><span class="flbl">Title</span><button class="cpbtn" onclick="cp(document.getElementById('dt').textContent,this)">copy</button></div>
-        <div class="fbody" id="dt">${esc(dp.title||'')}</div>
-        ${cc(dp.title,60)}
+        <div class="fbody" id="dt">${esc(dp.title||'')}</div>${cc(dp.title,60)}
       </div>
       <div class="div"></div>
       <div class="field">
-        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cp(document.getElementById('dd').textContent,this)">copy</button></div>
-        <div class="fbody" id="dd">${esc(dp.description||'')}</div>
-        ${cc(dp.description,500)}
+        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cpWithStorage('dd',this)">copy</button></div>
+        <div class="fbody" id="dd">${esc(dp.description||'')}</div>${cc(dp.description,500)}
       </div>
       <div class="div"></div>
       <div class="field">
-        <div class="fhead">
-          <span class="flbl">Hashtags <span style="font-weight:400;color:var(--t3);font-size:9px;">${tags.length}/5</span></span>
-          <button class="cpbtn" onclick="cp(${JSON.stringify(tags.map(t=>'#'+t.replace(/^#/,'')).join(' '))},this)">copy all</button>
-        </div>
+        <div class="fhead"><span class="flbl">Hashtags <span style="font-weight:400;color:var(--t3);font-size:9px;">${tags.length}/5</span></span><button class="cpbtn" onclick="cp('${tags.map(t=>'#'+t.replace(/^#/,'')).join(' ')}',this)">copy all</button></div>
         <div class="tags-wrap">${tags.map(t=>`<span class="htag" onclick="cp('#${esc(t.replace(/^#/,''))}',this)">#${esc(t.replace(/^#/,''))}</span>`).join('')}</div>
-        <div class="tag-note">Tap any tag to copy individually · Depop limit: 5 hashtags</div>
+        <div class="tag-note">Tap tag to copy · Depop limit: 5 hashtags</div>
       </div>
     </div></div>
 
     <!-- EBAY -->
-    <div class="panel" id="panel-e"><div class="card">
+    <div class="panel" id="rpanel-e"><div class="card">
       <div class="p-badge be"><span class="dot"></span>eBay · Business seller</div>
       ${seoBar(eb.seo_score)}
       <div class="field">
         <div class="fhead"><span class="flbl">Title</span><button class="cpbtn" onclick="cp(document.getElementById('et').textContent,this)">copy</button></div>
-        <div class="fbody" id="et">${esc(eb.title||'')}</div>
-        ${cc(eb.title,80)}
+        <div class="fbody" id="et">${esc(eb.title||'')}</div>${cc(eb.title,80)}
       </div>
       <div class="div"></div>
       <div class="field">
-        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cp(document.getElementById('ed').textContent,this)">copy</button></div>
-        <div class="fbody" id="ed">${esc(eb.description||'')}</div>
-        ${cc(eb.description,1500)}
+        <div class="fhead"><span class="flbl">Description</span><button class="cpbtn" onclick="cpWithStorage('ed',this)">copy</button></div>
+        <div class="fbody" id="ed">${esc(eb.description||'')}</div>${cc(eb.description,1500)}
       </div>
-      ${eb.item_specifics&&Object.keys(eb.item_specifics).some(k=>eb.item_specifics[k])?`
-      <div class="div"></div>
-      <div class="field">
-        <div class="fhead"><span class="flbl">Item specifics</span></div>
-        <div class="specs">${specs(eb.item_specifics)}</div>
-      </div>`:''}
+      ${eb.item_specifics&&Object.keys(eb.item_specifics).some(k=>eb.item_specifics[k])?`<div class="div"></div><div class="field"><div class="fhead"><span class="flbl">Item specifics</span></div><div class="specs">${specRows(eb.item_specifics)}</div></div>`:''}
     </div></div>
 
+    <button class="save-vault-btn" id="vault-save-btn" onclick="saveToVault()">Save to vault</button>
     <button class="reset-btn" onclick="resetApp()">← analyse another item</button>
   </div>`;
+}
 
-  document.getElementById('results').innerHTML=html;
+// Copy description with storage code substituted in
+function cpWithStorage(elId, btn){
+  const el=document.getElementById(elId);
+  const code=document.getElementById('storage-code-input')?.value.trim()||'';
+  let text=el.textContent;
+  if(code) text=text.replace(/\[STORAGE CODE: ___\]/g,`[STORAGE CODE: ${code}]`);
+  cp(text,btn);
 }
 
 function resetApp(){
-  files=[];renderThumbs();
+  files=[];currentResult=null;renderThumbs();
   document.getElementById('results').innerHTML='';
   document.getElementById('err').innerHTML='';
   document.getElementById('gbtn').disabled=true;
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+// ══════════════════════════════════════════════════════
+// VAULT
+// ══════════════════════════════════════════════════════
+function getVault(){try{return JSON.parse(localStorage.getItem(VAULT_STORE)||'[]');}catch{return[];}}
+function setVault(v){localStorage.setItem(VAULT_STORE,JSON.stringify(v));}
+
+function saveToVault(){
+  if(!currentResult)return;
+  const code=document.getElementById('storage-code-input')?.value.trim()||'';
+  const vault=getVault();
+  const entry={
+    id:Date.now().toString(),
+    date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+    storageCode:code,
+    item:currentResult.item,
+    vinted:currentResult.vinted,
+    depop:currentResult.depop,
+    ebay:currentResult.ebay,
+    status:'listed',
+    salePrice:null,
+    costPrice:null,
+    salePlatform:null
+  };
+  vault.unshift(entry);
+  setVault(vault);
+  const btn=document.getElementById('vault-save-btn');
+  btn.textContent='Saved to vault ✓';btn.classList.add('saved');
+  setTimeout(()=>{btn.textContent='Save to vault';btn.classList.remove('saved');},2000);
 }
+
+function renderVault(){
+  const vault=getVault();
+  const el=document.getElementById('vault-list');
+  if(!vault.length){
+    el.innerHTML=`<div class="vault-empty">Your vault is empty.<br>Generate a listing and tap<br>"Save to vault" to keep it here.</div>`;
+    return;
+  }
+  el.innerHTML=vault.map(e=>{
+    const it=e.item||{};
+    const statusCls=e.status==='sold'?'status-sold':'status-listed';
+    const statusTxt=e.status==='sold'?'Sold':'Listed';
+    const profitStr=e.status==='sold'&&e.salePrice!=null&&e.costPrice!=null
+      ?`£${(e.salePrice-e.costPrice).toFixed(2)} profit`:'';
+    return `<div class="vault-item" id="vitem-${e.id}">
+      <div class="vault-item-hdr">
+        <div>
+          <div class="vault-item-name">${esc(it.brand||'Unknown')} ${esc(it.type||'')}
+            <span class="vault-status ${statusCls}">${statusTxt}</span>
+          </div>
+          <div class="vault-item-meta">${[it.colour,it.size_label?`Size ${it.size_label}`:'',e.storageCode].filter(Boolean).map(esc).join(' · ')}${profitStr?` · <span style="color:var(--ok);">${profitStr}</span>`:''}</div>
+        </div>
+        <div class="vault-item-date">${e.date}</div>
+      </div>
+      <div class="vault-actions">
+        <button class="vault-btn" onclick="expandVaultItem('${e.id}')">View</button>
+        ${e.status!=='sold'?`<button class="vault-btn sold-btn" onclick="openSoldModal('${e.id}')">Mark sold</button>`:''}
+        <button class="vault-btn del" onclick="deleteVaultItem('${e.id}')">Delete</button>
+      </div>
+      <div id="vexpand-${e.id}" style="display:none;margin-top:12px;"></div>
+    </div>`;
+  }).join('');
+}
+
+function expandVaultItem(id){
+  const vault=getVault();
+  const e=vault.find(x=>x.id===id);
+  if(!e)return;
+  const el=document.getElementById('vexpand-'+id);
+  if(el.style.display!=='none'){el.style.display='none';return;}
+  const v=e.vinted||{},dp=e.depop||{},eb=e.ebay||{};
+  const tags=(dp.hashtags||[]).slice(0,5);
+  el.style.display='block';
+  el.innerHTML=`<div class="tabs" style="margin-top:0;">
+    <button class="tab tab-v on" id="vtab-${id}-v" onclick="showVaultTab('${id}','v')">Vinted</button>
+    <button class="tab tab-d" id="vtab-${id}-d" onclick="showVaultTab('${id}','d')">Depop</button>
+    <button class="tab tab-e" id="vtab-${id}-e" onclick="showVaultTab('${id}','e')">eBay</button>
+  </div>
+  <div class="panel on" id="vpanel-${id}-v">
+    <div style="font-size:13px;font-weight:600;color:var(--t1);margin-bottom:6px;">${esc(v.title||'')}</div>
+    <div style="font-size:12px;color:var(--t2);line-height:1.6;white-space:pre-wrap;">${esc(v.description||'')}</div>
+    <button class="cpbtn" style="margin-top:8px;" onclick="cp(${JSON.stringify((v.title||'')+'\n\n'+(v.description||''))},this)">copy title + desc</button>
+  </div>
+  <div class="panel" id="vpanel-${id}-d">
+    <div style="font-size:13px;font-weight:600;color:var(--t1);margin-bottom:6px;">${esc(dp.title||'')}</div>
+    <div style="font-size:12px;color:var(--t2);line-height:1.6;white-space:pre-wrap;">${esc(dp.description||'')}</div>
+    <div class="tags-wrap" style="margin-top:8px;">${tags.map(t=>`<span class="htag" onclick="cp('#${esc(t.replace(/^#/,''))}',this)">#${esc(t.replace(/^#/,''))}</span>`).join('')}</div>
+    <button class="cpbtn" style="margin-top:8px;" onclick="cp(${JSON.stringify((dp.title||'')+'\n\n'+(dp.description||'')+'\n\n'+tags.map(t=>'#'+t.replace(/^#/,'')).join(' '))},this)">copy all</button>
+  </div>
+  <div class="panel" id="vpanel-${id}-e">
+    <div style="font-size:13px;font-weight:600;color:var(--t1);margin-bottom:6px;">${esc(eb.title||'')}</div>
+    <div style="font-size:12px;color:var(--t2);line-height:1.6;white-space:pre-wrap;">${esc(eb.description||'')}</div>
+    <button class="cpbtn" style="margin-top:8px;" onclick="cp(${JSON.stringify((eb.title||'')+'\n\n'+(eb.description||''))},this)">copy title + desc</button>
+  </div>`;
+}
+
+function showVaultTab(id,p){
+  ['v','d','e'].forEach(x=>{
+    document.getElementById(`vtab-${id}-${x}`).className='tab tab-'+x+(x===p?' on':'');
+    const el=document.getElementById(`vpanel-${id}-${x}`);
+    if(el)el.className='panel'+(x===p?' on':'');
+  });
+}
+
+function deleteVaultItem(id){
+  if(!confirm('Delete this listing?'))return;
+  setVault(getVault().filter(x=>x.id!==id));
+  renderVault();
+}
+
+// ══════════════════════════════════════════════════════
+// SOLD MODAL
+// ══════════════════════════════════════════════════════
+function openSoldModal(id){
+  soldTargetId=id;
+  document.getElementById('sale-price').value='';
+  document.getElementById('cost-price').value='';
+  document.getElementById('sale-platform').value='vinted';
+  document.getElementById('sold-modal').classList.add('on');
+}
+function closeSoldModal(){
+  document.getElementById('sold-modal').classList.remove('on');
+  soldTargetId=null;
+}
+function confirmSold(){
+  if(!soldTargetId)return;
+  const sale=parseFloat(document.getElementById('sale-price').value)||0;
+  const cost=parseFloat(document.getElementById('cost-price').value)||0;
+  const platform=document.getElementById('sale-platform').value;
+  const vault=getVault();
+  const idx=vault.findIndex(x=>x.id===soldTargetId);
+  if(idx>-1){vault[idx].status='sold';vault[idx].salePrice=sale;vault[idx].costPrice=cost;vault[idx].salePlatform=platform;}
+  setVault(vault);
+  closeSoldModal();
+  renderVault();
+}
+
+// ══════════════════════════════════════════════════════
+// ANALYTICS
+// ══════════════════════════════════════════════════════
+function renderAnalytics(){
+  const vault=getVault();
+  const el=document.getElementById('analytics-content');
+  if(!vault.length){
+    el.innerHTML=`<div class="analytics-empty">No data yet.<br>Save listings to the vault and<br>mark items as sold to see analytics.</div>`;
+    return;
+  }
+
+  const sold=vault.filter(x=>x.status==='sold');
+  const totalRevenue=sold.reduce((a,x)=>a+(x.salePrice||0),0);
+  const totalCost=sold.reduce((a,x)=>a+(x.costPrice||0),0);
+  const totalProfit=totalRevenue-totalCost;
+  const avgProfit=sold.length?totalProfit/sold.length:0;
+  const roi=totalCost>0?((totalProfit/totalCost)*100):0;
+
+  // Platform breakdown
+  const platforms=['vinted','depop','ebay','other'];
+  const platCounts={};
+  platforms.forEach(p=>platCounts[p]=sold.filter(x=>x.salePlatform===p).length);
+  const topPlat=platforms.sort((a,b)=>platCounts[b]-platCounts[a])[0];
+
+  // Ranked by profit
+  const ranked=[...sold].filter(x=>x.salePrice!=null&&x.costPrice!=null)
+    .map(x=>({...x,profit:x.salePrice-x.costPrice}))
+    .sort((a,b)=>b.profit-a.profit);
+
+  el.innerHTML=`
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-lbl">Total profit</div>
+        <div class="stat-val" style="color:${totalProfit>=0?'var(--ok)':'var(--err)'};">£${totalProfit.toFixed(2)}</div>
+        <div class="stat-sub">${sold.length} item${sold.length!==1?'s':''} sold</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Total revenue</div>
+        <div class="stat-val">£${totalRevenue.toFixed(2)}</div>
+        <div class="stat-sub">Cost: £${totalCost.toFixed(2)}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Avg profit</div>
+        <div class="stat-val" style="color:${avgProfit>=0?'var(--ok)':'var(--err)'};">£${avgProfit.toFixed(2)}</div>
+        <div class="stat-sub">per item sold</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">ROI</div>
+        <div class="stat-val" style="color:${roi>=0?'var(--ok)':'var(--err)'};">${roi.toFixed(0)}%</div>
+        <div class="stat-sub">${vault.length} in vault</div>
+      </div>
+    </div>
+
+    <div class="section-lbl">Sales by platform</div>
+    <div class="platform-breakdown" style="margin-bottom:20px;">
+      <div class="plat-stat"><div class="plat-stat-val" style="color:var(--vinted);">${sold.filter(x=>x.salePlatform==='vinted').length}</div><div class="plat-stat-lbl">Vinted</div></div>
+      <div class="plat-stat"><div class="plat-stat-val" style="color:var(--depop);">${sold.filter(x=>x.salePlatform==='depop').length}</div><div class="plat-stat-lbl">Depop</div></div>
+      <div class="plat-stat"><div class="plat-stat-val" style="color:var(--ebay);">${sold.filter(x=>x.salePlatform==='ebay').length}</div><div class="plat-stat-lbl">eBay</div></div>
+    </div>
+
+    ${ranked.length?`
+    <div class="section-lbl">Most profitable items</div>
+    ${ranked.map((x,i)=>{
+      const it=x.item||{};
+      return `<div class="rank-item">
+        <div class="rank-num ${i===0?'top':'}">${i+1}</div>
+        <div class="rank-info">
+          <div class="rank-name">${esc(it.brand||'Unknown')} ${esc(it.type||'')}</div>
+          <div class="rank-meta">Sold on ${x.salePlatform||'?'} · £${(x.salePrice||0).toFixed(2)} sale${x.storageCode?' · '+esc(x.storageCode):''}</div>
+        </div>
+        <div class="rank-profit ${x.profit<0?'neg':''}">£${x.profit.toFixed(2)}</div>
+      </div>`;
+    }).join('')}`:''}
+  `;
+}
+
+// Service worker
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
 </script>
 </body>
 </html>
