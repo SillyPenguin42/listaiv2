@@ -806,7 +806,12 @@ SEO score: title 75-80 chars (35) + keyword density (25) + description 900+ char
         }
 
         const raw=data.content.map(b=>b.text||'').join('');
-        const d=JSON.parse(raw.replace(/```json|```/g,'').trim());
+        // Robustly extract JSON — find the first { and last } even if AI adds preamble text
+        const firstBrace=raw.indexOf('{');
+        const lastBrace=raw.lastIndexOf('}');
+        if(firstBrace===-1||lastBrace===-1) throw new Error('No JSON found in response — please try again');
+        const jsonStr=raw.slice(firstBrace,lastBrace+1);
+        const d=JSON.parse(jsonStr);
         if(d.depop?.hashtags?.length>5)d.depop.hashtags=d.depop.hashtags.slice(0,5);
 
         currentResult=d;
