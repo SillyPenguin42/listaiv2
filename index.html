@@ -627,13 +627,13 @@ MEASUREMENTS — NEVER GUESS
 Only fill a measurement if clearly readable from a label, tape, or ruler in the photos. Use ___ for anything not visible. The seller fills in blanks themselves.
 
 Tops format:
-Pit to pit: ___cm
-Shoulder to hem: ___cm
+Pit to pit: ___"
+Shoulder to hem: ___"
 
 Bottoms format:
-Waist (flat): ___cm
-Total length: ___cm
-Inseam: ___cm
+Waist (flat): ___"
+Total length: ___"
+Inseam: ___"
 
 Footwear: set measurements_block to ""
 
@@ -646,7 +646,16 @@ Use clean line breaks between each section. Be specific, confident, and keyword-
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 VINTED — PRO SELLER
 ━━━━━━━━━━━━━━━━━━━━━━━━━
-Title (55-60 chars): [Brand] [precise item type] [key descriptor] [Size] [era/style keyword]
+Title — CRITICAL RULES, read carefully:
+- Target 55-60 characters — count every single character, never stop short
+- Every word must be a real search term buyers type — no filler, no catalogue language
+- BANNED WORDS — never use: "apparel", "clothing", "garment", "item", "piece", "product", "wear", "goods"
+- REQUIRED structure: [Brand] [precise item type] [colour] [department Mens/Womens] [Size] [era] [style keyword]
+- Era keywords that drive Vinted traffic: 90s, Y2K, vintage, retro, 80s, 00s — include the most relevant one
+- Style keywords that drive Vinted traffic: oversized, streetwear, grunge, indie, skater, workwear, prep — include the most relevant one
+- Size must always be in the title — it directly increases click-through rate
+- Example of a CORRECT title (58 chars): "Champion Grey T-Shirt Mens XL Vintage 90s Streetwear"
+- Example of a BAD title (penalised): "Vintage Champion Grey T-Shirt XL Athletic Apparel" — "Athletic Apparel" = zero buyer searches, wastes characters
 
 description_body — target 600-750 chars, structured in clearly separated blocks:
 
@@ -668,7 +677,16 @@ SEO score: title keyword density (30) + title 55-60 chars (20) + description qua
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 DEPOP — BUSINESS SELLER
 ━━━━━━━━━━━━━━━━━━━━━━━━━
-Title (55-60 chars): [Era/Aesthetic] [Brand] [precise item type] [Size]
+Title — CRITICAL RULES, read carefully:
+- Target 55-60 characters — count every single character, never stop short
+- Every word must be a real search term buyers actually type on Depop
+- BANNED WORDS — never use: "apparel", "clothing", "garment", "item", "piece", "product", "wear", "goods", "athletic"
+- REQUIRED structure: [Era/Aesthetic] [Brand] [precise item type] [colour] [department Mens/Womens] [Size]
+- Lead with the era/aesthetic label — this is what Depop buyers search first: "Vintage 90s", "Y2K", "Grunge", "Streetwear"
+- Include department (Mens/Womens) — this is a heavily filtered field on Depop
+- Size always included at the end
+- Example of a CORRECT title (53 chars): "Vintage 90s Champion Grey T-Shirt Mens XL Streetwear"
+- Example of a BAD title (penalised): "Vintage Champion Grey T-Shirt XL Athletic Apparel" — no era precision, no department, dead language
 
 description_body — target 380-480 chars, structured:
 
@@ -689,9 +707,15 @@ SEO score: aesthetic keyword in title (30) + title 55-60 chars (20) + hashtag qu
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 EBAY — BUSINESS SELLER
 ━━━━━━━━━━━━━━━━━━━━━━━━━
-Title: TARGET 75-80 CHARACTERS EXACTLY. Count every character.
-Pattern: [Brand] [precise type] [descriptor] [Mens/Womens] [Size] [Colour] [era] [keywords]
-No punctuation except hyphens. No filler words (a/the/and/in/for).
+Title — CRITICAL RULES, read carefully:
+- TARGET EXACTLY 75-80 characters — count every single character before finalising
+- Every character is indexable search real estate — fill it completely
+- BANNED WORDS: "apparel", "clothing", "garment", "item", "piece", "athletic wear", "goods"
+- REQUIRED pattern: [Brand] [precise type] [descriptor] [Mens/Womens] [Size] [Colour] [Era] [style keywords]
+- No punctuation except hyphens. No filler words (a/the/and/in/for/with)
+- Include as many of these high-traffic eBay keywords as fit: vintage, retro, Y2K, 90s, streetwear, oversized, rare, deadstock
+- Example of a CORRECT title (77 chars): "Champion Grey T-Shirt Mens XL Vintage 90s Streetwear Oversized Cotton Tee"
+- Example of a BAD title: anything under 70 chars or containing "Athletic Apparel"
 
 description_body — target 900-1100 chars, structured with clear section headers:
 
@@ -769,6 +793,9 @@ SEO score: title 75-80 chars (35) + keyword density (25) + description 900+ char
     renderResults(d);
     setTimeout(()=>document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'}),100);
 
+    // Fire pricing research in background — don't block rendering
+    fetchPricing(d.item);
+
   }catch(e){
     clearInterval(mt);
     document.getElementById('loading').style.display='none';
@@ -776,6 +803,130 @@ SEO score: title 75-80 chars (35) + keyword density (25) + description 900+ char
     document.getElementById('gbtn').disabled=false;
     document.getElementById('err').innerHTML=`<div class="err-box">Error: ${esc(e.message)}<br><br>Check your API key is valid at console.anthropic.com</div>`;
   }
+}
+
+// ══════════════════════════════════════════════════════
+// PRICING RESEARCH
+// ══════════════════════════════════════════════════════
+async function fetchPricing(item){
+  if(!item) return;
+  const key=getKey();
+  if(!key) return;
+
+  const priceEl=document.getElementById('price-card');
+  if(!priceEl) return;
+  priceEl.innerHTML=`<div style="display:flex;align-items:center;gap:10px;padding:4px 0;"><div style="width:16px;height:16px;border:2px solid var(--b2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;"></div><span style="font-size:12px;font-family:'DM Mono',monospace;color:var(--t2);">Researching sold prices...</span></div>`;
+
+  const brand=item.brand||'';
+  const type=item.type||'';
+  const colour=item.colour||'';
+  const size=item.size_label||item.size_uk||'';
+  const condition=item.condition||'';
+  const era=item.era||'';
+
+  const searchQuery=`${brand} ${type} ${colour} ${size} ${era} sold price UK secondhand`.trim();
+
+  const pricingPrompt=`You are a UK secondhand clothing pricing expert. Research current market prices for the following item and give realistic pricing recommendations for a UK business seller.
+
+ITEM: ${brand} ${type} — ${colour} — Size ${size} — ${condition} — ${era}
+
+Use your web search tool to find:
+1. Recent sold listings on eBay UK for this exact item (search "sold listings")
+2. Current asking prices on Vinted UK and Depop for comparable items
+
+Then return ONLY a valid JSON object — no markdown, no explanation:
+
+{
+  "search_used": "the search terms you used",
+  "vinted": {
+    "low": 0,
+    "mid": 0,
+    "high": 0,
+    "recommended": 0,
+    "notes": "brief note on what sold comps show"
+  },
+  "depop": {
+    "low": 0,
+    "mid": 0,
+    "high": 0,
+    "recommended": 0,
+    "notes": "brief note on demand and buyer type"
+  },
+  "ebay": {
+    "low": 0,
+    "mid": 0,
+    "high": 0,
+    "recommended": 0,
+    "notes": "brief note on sold comps found"
+  },
+  "pricing_confidence": "high/medium/low",
+  "market_insight": "2-3 sentence summary — is demand strong or weak, any trend affecting this item, best platform to price highest"
+}
+
+All prices in GBP (£). Base recommendations on condition grade of ${condition}. If you cannot find specific comps for this exact item, use the closest comparable items and note this.`;
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        messages:[{role:'user',content:pricingPrompt}]
+      })
+    });
+
+    const data=await resp.json();
+    if(!resp.ok) throw new Error(data.error?.message||'Pricing API error');
+
+    // Extract text content — web search responses have mixed content blocks
+    const textBlocks=data.content.filter(b=>b.type==='text').map(b=>b.text||'').join('');
+    const clean=textBlocks.replace(/```json|```/g,'').trim();
+
+    // Find JSON in the response
+    const jsonMatch=clean.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('No pricing data returned');
+    const p=JSON.parse(jsonMatch[0]);
+
+    renderPricing(p);
+  }catch(e){
+    if(priceEl) priceEl.innerHTML=`<div style="font-size:12px;font-family:'DM Mono',monospace;color:var(--t3);padding:4px 0;">Price research unavailable — check manually on eBay sold listings.</div>`;
+  }
+}
+
+function renderPricing(p){
+  const el=document.getElementById('price-card');
+  if(!el) return;
+
+  const confColor=p.pricing_confidence==='high'?'var(--ok)':p.pricing_confidence==='medium'?'var(--warn)':'var(--t3)';
+
+  function platBlock(name,data,color){
+    if(!data) return '';
+    return `<div style="background:var(--s2);border-radius:var(--rsm);padding:11px 13px;">
+      <div style="font-size:10px;font-family:'DM Mono',monospace;color:${color};text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;">${name}</div>
+      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:6px;">
+        <span style="font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-0.03em;">£${data.recommended}</span>
+        <span style="font-size:11px;font-family:'DM Mono',monospace;color:var(--t3);">recommended</span>
+      </div>
+      <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--t3);margin-bottom:6px;">Range: £${data.low} — £${data.high}</div>
+      ${data.notes?`<div style="font-size:12px;color:var(--t2);line-height:1.5;">${esc(data.notes)}</div>`:''}
+    </div>`;
+  }
+
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:.06em;color:var(--t3);text-transform:uppercase;">Price research</div>
+      <div style="font-size:10px;font-family:'DM Mono',monospace;color:${confColor};">${p.pricing_confidence||'—'} confidence</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+      ${platBlock('Vinted',p.vinted,'var(--vinted)')}
+      ${platBlock('Depop',p.depop,'var(--depop)')}
+      ${platBlock('eBay',p.ebay,'var(--ebay)')}
+    </div>
+    ${p.market_insight?`<div style="font-size:13px;color:var(--t2);line-height:1.6;padding:10px 12px;background:var(--s2);border-radius:var(--rsm);">${esc(p.market_insight)}</div>`:''}
+    ${p.search_used?`<div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);margin-top:8px;">Searched: ${esc(p.search_used)}</div>`:''}
+  `;
 }
 
 // ══════════════════════════════════════════════════════
@@ -808,8 +959,8 @@ function renderResults(d){
   const isBottoms=/trouser|jogger|short|jean|skirt|pant/i.test(it.type||'');
   const rawMeas=(d.measurements_block||'').trim();
   const measPlaceholder=isBottoms
-    ? 'Waist (flat): ___cm\nTotal length: ___cm\nInseam: ___cm'
-    : 'Pit to pit: ___cm\nShoulder to hem: ___cm';
+    ? 'Waist (flat): ___"\nTotal length: ___"\nInseam: ___"'
+    : 'Pit to pit: ___"\nShoulder to hem: ___"';
   const measValue=rawMeas||'';
   const measRows=measPlaceholder.split('\n').length;
   const detectedCode=(d.storage_code_from_photo||'').trim();
@@ -847,6 +998,9 @@ function renderResults(d){
         style="width:100%;background:var(--s2);border:1px solid ${detectedCode?'var(--gold)':'var(--b2)'};border-radius:var(--rsm);padding:10px 12px;font-size:13px;font-family:'DM Mono',monospace;color:var(--gold-l);-webkit-appearance:none;outline:none;display:block;"
       >${detectedCode?`<div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ok);margin-top:4px;">Found in photos ✓</div>`:''}
     </div>
+
+    <!-- Price research card — populated async after listing generation -->
+    <div id="price-card" style="background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;min-height:48px;"></div>
 
     <!-- Platform tabs -->
     <div class="tabs">
