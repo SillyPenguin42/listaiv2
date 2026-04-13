@@ -774,27 +774,70 @@ SEO score: title 75-80 chars (35) + keyword density (25) + description 900+ char
   }
 }`;
 
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',content:[...imgs,{type:'text',text:prompt}]}]})
-    });
+    // Retry up to 4 times on overloaded errors with increasing delays
+    const MAX_RETRIES=4;
+    let lastError;
+    for(let attempt=1;attempt<=MAX_RETRIES;attempt++){
+      try{
+        if(attempt>1){
+          const delay=attempt*8000; // 8s, 16s, 24s
+          document.getElementById('lmsg').textContent=`API busy — retrying in ${delay/1000}s (attempt ${attempt}/${MAX_RETRIES})...`;
+          await new Promise(r=>setTimeout(r,delay));
+          document.getElementById('lmsg').textContent=MSGS[mi];
+        }
 
-    const data=await resp.json();
-    if(!resp.ok)throw new Error(data.error?.message||`API error ${resp.status}`);
-    const raw=data.content.map(b=>b.text||'').join('');
-    const d=JSON.parse(raw.replace(/```json|```/g,'').trim());
-    if(d.depop?.hashtags?.length>5)d.depop.hashtags=d.depop.hashtags.slice(0,5);
+        const resp=await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+          body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',content:[...imgs,{type:'text',text:prompt}]}]})
+        });
 
-    currentResult=d;
-    clearInterval(mt);
-    document.getElementById('loading').style.display='none';
-    document.getElementById('main').style.display='block';
-    renderResults(d);
-    setTimeout(()=>document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'}),100);
+        const data=await resp.json();
 
-    // Fire pricing research in background — don't block rendering
-    fetchPricing(d.item);
+        // Retry on overloaded
+        if(!resp.ok){
+          const msg=(data.error?.message||'').toLowerCase();
+          const isOverloaded=resp.status===529||msg.includes('overload')||msg.includes('capacity');
+          if(isOverloaded&&attempt<MAX_RETRIES){
+            lastError=new Error(data.error?.message||`API overloaded`);
+            continue;
+          }
+          throw new Error(data.error?.message||`API error ${resp.status}`);
+        }
+
+        const raw=data.content.map(b=>b.text||'').join('');
+        const d=JSON.parse(raw.replace(/```json|```/g,'').trim());
+        if(d.depop?.hashtags?.length>5)d.depop.hashtags=d.depop.hashtags.slice(0,5);
+
+        currentResult=d;
+        clearInterval(mt);
+        document.getElementById('loading').style.display='none';
+        document.getElementById('main').style.display='block';
+        renderResults(d);
+        setTimeout(()=>document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'}),100);
+        fetchPricing(d.item);
+        lastError=null;
+        break;
+
+      }catch(e){
+        lastError=e;
+        const msg=(e.message||'').toLowerCase();
+        const isOverloaded=msg.includes('overload')||msg.includes('capacity')||msg.includes('529');
+        if(!isOverloaded||attempt>=MAX_RETRIES) break;
+      }
+    }
+
+    if(lastError){
+      clearInterval(mt);
+      document.getElementById('loading').style.display='none';
+      document.getElementById('main').style.display='block';
+      document.getElementById('gbtn').disabled=false;
+      const isOverloaded=(lastError.message||'').toLowerCase().includes('overload')||(lastError.message||'').toLowerCase().includes('capacity');
+      document.getElementById('err').innerHTML=`<div class="err-box">${isOverloaded
+        ? 'Anthropic servers are currently overloaded. This is temporary — please wait a few minutes and try again. Adding credit at console.anthropic.com can also help by moving you to a higher priority tier.'
+        : `Error: ${esc(lastError.message)}<br><br>Check your API key is valid at console.anthropic.com`
+      }</div>`;
+    }
 
   }catch(e){
     clearInterval(mt);
